@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+
+<!--
+  Go language syntax
+  Copyright 2014 Andrew Carter
+-->
+
+<dict>
+	<key>BBEditDocumentType</key>
+	<string>CodelessLanguageModule</string>
+	<key>BBLMLanguageDisplayName</key>
+	<string>Go</string>
+	<key>BBLMLanguageCode</key>
+	<string>go</string>
+	<key>BBLMColorsSyntax</key>
+	<true/>
+	<key>BBLMScansFunctions</key>
+	<true/>
+	<key>BBLMCanSpellCheckCodeRuns</key>
+  <false/>
+	<key>BBLMIsCaseSensitive</key>
+	<true/>
+	<key>BBLMKeywordList</key>
+	<array>
+    <string>append</string>
+    <string>bool</string>
+    <string>break</string>
+    <string>byte</string>
+    <string>cap</string>
+    <string>case</string>
+    <string>chan</string>
+    <string>close</string>
+    <string>complex</string>
+    <string>complex128</string>
+    <string>complex64</string>
+    <string>const</string>
+    <string>continue</string>
+    <string>copy</string>
+    <string>default</string>
+    <string>defer</string>
+    <string>delete</string>
+    <string>else</string>
+    <string>error</string>
+    <string>fallthrough</string>
+    <string>float32</string>
+    <string>float64</string>
+    <string>for</string>
+    <string>func</string>
+    <string>go</string>
+    <string>goto</string>
+    <string>if</string>
+    <string>iota</string>
+    <string>imag</string>
+    <string>import</string>
+    <string>int</string>
+    <string>int16</string>
+    <string>int32</string>
+    <string>int64</string>
+    <string>int8</string>
+    <string>interface</string>
+    <string>len</string>
+    <string>make</string>
+    <string>map</string>
+    <string>new</string>
+    <string>package</string>
+    <string>panic</string>
+    <string>print</string>
+    <string>println</string>
+    <string>range</string>
+    <string>real</string>
+    <string>recover</string>
+    <string>return</string>
+    <string>rune</string>
+    <string>select</string>
+    <string>string</string>
+    <string>struct</string>
+    <string>switch</string>
+    <string>type</string>
+    <string>uint</string>
+    <string>uint16</string>
+    <string>uint32</string>
+    <string>uint64</string>
+    <string>uint8</string>
+    <string>uintptr</string>
+    <string>var</string>
+	</array>
+	<key>BBLMPredefinedNameList</key>
+	<array>
+    <string>false</string>
+    <string>nil</string>
+    <string>true</string>
+  </array>
+	<key>BBLMSuffixMap</key>
+	<array>
+		<dict>
+			<key>BBLMLanguageSuffix</key>
+			<string>.go</string>
+		</dict>
+	</array>
+	<key>Language Features</key>
+	<dict>
+		<key>Identifier and Keyword Character Class</key>
+		<string>A-Za-z0-9_</string>
+		
+		<!-- No patterns -->
+<!-- 
+		<key>Prefix for Functions</key>
+		<string>func</string>
+		<key>Prefix for Procedures</key>
+		<string>func</string>
+		<key>Open Parameter Lists</key>
+		<string>(</string>
+		<key>Close Parameter Lists</key>
+		<string>)</string>
+		<key>Terminator for Prototypes 1</key>
+		<string>;</string>
+		<key>Terminator for Prototypes 2</key>
+		<string></string>
+    <key>Open Statement Blocks</key>
+		<string>{</string>
+		<key>Close Statement Blocks</key>
+		<string>}</string>
+ -->
+<!-- 
+		<key>Open Block Comments</key>
+		<string>/*</string>
+		<key>Close Block Comments</key>
+		<string>*/</string>
+		<key>Open Line Comments</key>
+		<string>//</string>
+		<key>Open Strings 1</key>
+		<string>`</string>
+    <key>Close Strings 1</key>
+		<string>`</string>
+		<key>Escape Char in Strings 1</key>
+		<string></string>
+		<key>End-of-line Ends Strings 1</key>
+		<false/>
+		<key>Open Strings 2</key>
+		<string>"</string>
+		<key>Close Strings 2</key>
+		<string>"</string>
+		<key>Escape Char in Strings 2</key>
+		<string>\</string>
+		<key>End-of-line Ends Strings 2</key>
+		<true/>
+ -->
+ 
+    <!-- Using patterns -->
+    <key>String Pattern</key>
+		<string><![CDATA[
+      (?x:
+        ("	(?s: \\. | [^"])*?	(?: " | $))	|  (?# Interpreted string literal)
+        ('	(?s: \\' | [^'])*?	(?: ' | $))	|  (?# Rune literal)
+        (`	(?s: [^`])      *?  `)             (?# Raw string literal)
+      )]]>
+    </string>
+    <key>Comment Pattern</key>
+    <string><![CDATA[
+      (?x:
+          (\/\/.*?$) |               (?# Line comment)
+          (^/\*(?s:.*?)(?:\*/ | \z)) (?# Block comment)
+      )]]>
+    </string>
+    <key>Skip Pattern</key>
+    <string><![CDATA[
+      (?x:
+          (?P>comment) |
+          (?P>string)
+      )]]>
+    </string>
+
+    <!--
+      func <functionName> (optionalParameters) optionalReturnType {
+        body
+      }
+      func <functionName> (optionalParameters) (optionalReturnValues) {
+        body
+      }
+      func (receiver) <functionName> (optionalParameters) (optionalReturnValues) {
+        body
+      }
+    -->
+    <key>Function Pattern</key>
+    <string><![CDATA[
+      (?x: 
+        (?P<function>
+          func
+          (?:
+            (?>
+              (?> \s+ )
+            )
+          )+
+          (?# receiver)
+          (?P<parens>
+            \(
+              (?:
+                (?>
+                  (?> [^'"()]+ ) | (?: / (?![/*]) ) | (?P>comment) | (?P>string) | (?P>parens)
+                )
+              )*
+            \)
+          )*
+          (?:
+            (?>
+              (?> \s+ )
+            )
+          )*
+          (?P<function_name>[a-zA-Z0-9_]+)
+          (?:
+            (?>
+              (?> \s+ )
+            )
+          )*
+          (?# parameters)
+          (?P>parens)
+          (?:
+            (?>
+              (?> \s+ )
+            )
+          )*
+          (?# return)
+          (?:
+            (?>
+              (?P>parens) | [a-zA-Z0-9_]+ | \s+
+            )
+          )
+          (?:
+            (?>
+              (?> \s+ )
+            )
+          )?
+          (?# body)
+          (?P<braces>
+            {
+              (?:
+                (?>
+                  (?> [^'"{}]+ ) | (?: / (?![/*]) ) | (?P>comment) | (?P>string) | (?P>braces)
+                )
+              )*
+            }
+          )
+        )
+      )]]>
+		</string>    
+	</dict>	
+</dict>
+</plist>
+
