@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 
 <!--
@@ -9,22 +9,22 @@
 -->
 
 <dict>
-	<key>BBEditDocumentType</key>
-	<string>CodelessLanguageModule</string>
-	<key>BBLMLanguageDisplayName</key>
-	<string>Go</string>
-	<key>BBLMLanguageCode</key>
-	<string>go</string>
-	<key>BBLMColorsSyntax</key>
-	<true/>
-	<key>BBLMScansFunctions</key>
-	<true/>
-	<key>BBLMCanSpellCheckCodeRuns</key>
+  <key>BBEditDocumentType</key>
+  <string>CodelessLanguageModule</string>
+  <key>BBLMLanguageDisplayName</key>
+  <string>Go</string>
+  <key>BBLMLanguageCode</key>
+  <string>go</string>
+  <key>BBLMColorsSyntax</key>
+  <true/>
+  <key>BBLMScansFunctions</key>
+  <true/>
+  <key>BBLMCanSpellCheckCodeRuns</key>
   <false/>
-	<key>BBLMIsCaseSensitive</key>
-	<true/>
-	<key>BBLMKeywordList</key>
-	<array>
+  <key>BBLMIsCaseSensitive</key>
+  <true/>
+  <key>BBLMKeywordList</key>
+  <array>
     <string>append</string>
     <string>bool</string>
     <string>break</string>
@@ -86,78 +86,34 @@
     <string>uint8</string>
     <string>uintptr</string>
     <string>var</string>
-	</array>
-	<key>BBLMPredefinedNameList</key>
-	<array>
+  </array>
+  <key>BBLMPredefinedNameList</key>
+  <array>
     <string>false</string>
     <string>nil</string>
     <string>true</string>
   </array>
-	<key>BBLMSuffixMap</key>
-	<array>
-		<dict>
-			<key>BBLMLanguageSuffix</key>
-			<string>.go</string>
-		</dict>
-	</array>
-	<key>Language Features</key>
-	<dict>
-		<key>Identifier and Keyword Character Class</key>
-		<string>A-Za-z0-9_</string>
-		
-		<!-- No patterns -->
-<!-- 
-		<key>Prefix for Functions</key>
-		<string>func</string>
-		<key>Prefix for Procedures</key>
-		<string>func</string>
-		<key>Open Parameter Lists</key>
-		<string>(</string>
-		<key>Close Parameter Lists</key>
-		<string>)</string>
-		<key>Terminator for Prototypes 1</key>
-		<string>;</string>
-		<key>Terminator for Prototypes 2</key>
-		<string></string>
-    <key>Open Statement Blocks</key>
-		<string>{</string>
-		<key>Close Statement Blocks</key>
-		<string>}</string>
- -->
-<!-- 
-		<key>Open Block Comments</key>
-		<string>/*</string>
-		<key>Close Block Comments</key>
-		<string>*/</string>
-		<key>Open Line Comments</key>
-		<string>//</string>
-		<key>Open Strings 1</key>
-		<string>`</string>
-    <key>Close Strings 1</key>
-		<string>`</string>
-		<key>Escape Char in Strings 1</key>
-		<string></string>
-		<key>End-of-line Ends Strings 1</key>
-		<false/>
-		<key>Open Strings 2</key>
-		<string>"</string>
-		<key>Close Strings 2</key>
-		<string>"</string>
-		<key>Escape Char in Strings 2</key>
-		<string>\</string>
-		<key>End-of-line Ends Strings 2</key>
-		<true/>
- -->
- 
-    <!-- Using patterns -->
+  <key>BBLMSuffixMap</key>
+  <array>
+    <dict>
+      <key>BBLMLanguageSuffix</key>
+      <string>.go</string>
+    </dict>
+  </array>
+  <key>Language Features</key>
+  <dict>
+    <key>Identifier and Keyword Character Class</key>
+    <string>A-Za-z0-9_</string>
+    
     <key>String Pattern</key>
-		<string><![CDATA[
+    <string><![CDATA[
       (?x:
-        ("	(?s: \\. | [^"])*?	(?: " | $))	|  (?# Interpreted string literal)
-        ('	(?s: \\' | [^'])*?	(?: ' | $))	|  (?# Rune literal)
-        (`	(?s: [^`])      *?  `)             (?# Raw string literal)
+        ("  (?s: \\. | [^"])*?  (?: " | $)) |  (?# Interpreted string literal)
+        ('  (?s: \\' | [^'])*?  (?: ' | $)) |  (?# Rune literal)
+        (`  (?s: [^`])      *?  `)             (?# Raw string literal)
       )]]>
     </string>
+    
     <key>Comment Pattern</key>
     <string><![CDATA[
       (?x:
@@ -165,6 +121,7 @@
           (^/\*(?s:.*?)(?:\*/ | \z)) (?# Block comment)
       )]]>
     </string>
+    
     <key>Skip Pattern</key>
     <string><![CDATA[
       (?x:
@@ -245,8 +202,8 @@
           )
         )
       )]]>
-		</string>    
-	</dict>	
+    </string>    
+  </dict> 
 </dict>
 </plist>
 
