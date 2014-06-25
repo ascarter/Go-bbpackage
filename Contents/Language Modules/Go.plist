@@ -104,6 +104,12 @@
   <dict>
     <key>Identifier and Keyword Character Class</key>
     <string>A-Za-z0-9_</string>
+    <key>Open Block Comments</key>
+    <string>/*</string>
+    <key>Close Block Comments</key>
+    <string>*/</string>
+    <key>Open Line Comments</key>
+    <string>//</string>
     
     <key>String Pattern</key>
     <string><![CDATA[
