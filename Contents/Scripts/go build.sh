@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Run go fmt on the input file
+# Run go run the current file
 
 # This script is provided under The MIT License (MIT)
 # Copyright (c) 2014 Andrew Carter
@@ -15,4 +15,7 @@
 # IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 # THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-gofmt < /dev/stdin
+PKG_PATH=`dirname ${BB_DOC_PATH}`
+cd ${PKG_PATH}
+echo Building ${PKG_PATH} ...
+/usr/bin/time -p go build
