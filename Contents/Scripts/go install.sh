@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Run go run the current file
+# Run go test for current package
 
 # This script is provided under The MIT License (MIT)
 # Copyright (c) 2014 Andrew Carter
@@ -16,4 +16,5 @@
 # THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 source ../Resources/gofn.sh
-go_cmd run ${BB_DOC_PATH}
+go_cmd install ${BB_DOC_PATH}
+
