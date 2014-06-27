@@ -23,6 +23,6 @@ go_cmd() {
     fi
     
     cd $GOPKGROOT
-    GOPATH=$GOROOT:$GOPKGROOT go ${CMD} ${ARGS}
+    GOPATH=$GOPKGROOT go ${CMD} ${ARGS}
     
 }
