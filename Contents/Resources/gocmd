@@ -1,0 +1,27 @@
+#!/bin/sh
+
+upsearch () {
+    local start_path=$1
+    local go_path=$start_path
+    while [[ "$go_path" != "" && ! -e "$go_path/$2" ]]; do
+        go_path=${go_path%/*}
+    done
+    echo "$go_path"
+}
+
+# Execute go command from go path root using pkg path
+CMD=${1}
+ARGS=
+DOC=$2
+DOC_PATH=`dirname ${DOC}`
+GOPKGROOT=`upsearch $DOC_PATH src`
+PKG_PATH=`echo ${DOC_PATH#$GOPKGROOT/src/}`
+
+if [[ "$CMD" == "run" ]]; then
+    ARGS=${DOC}
+else
+    ARGS=${PKG_PATH}
+fi
+
+cd $GOPKGROOT
+GOPATH=$GOROOT:$GOPKGROOT go ${CMD} ${ARGS}
