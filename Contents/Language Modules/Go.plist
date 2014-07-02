@@ -110,6 +110,18 @@
     <string>*/</string>
     <key>Open Line Comments</key>
     <string>//</string>
+    <key>Prefix for Functions</key>
+    <string>func</string>
+    <key>Prefix for Procedures</key>
+    <string>func</string>
+    <key>Open Parameter Lists</key>
+    <string>(</string>
+    <key>Close Parameter Lists</key>
+    <string>)</string>
+    <key>Open Statement Blocks</key>
+    <string>{</string>
+    <key>Close Statement Blocks</key>
+    <string>}</string>
     
     <key>String Pattern</key>
     <string><![CDATA[
