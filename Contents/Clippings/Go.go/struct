@@ -1,0 +1,3 @@
+struct {
+    #PLACEHOLDERSTART#fieldName#PLACEHOLDEREND# #PLACEHOLDERSTART#type#PLACEHOLDEREND# <#* "tag" #>
+}
