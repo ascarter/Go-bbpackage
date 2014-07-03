@@ -25,73 +25,77 @@
   <true/>
   <key>BBLMKeywordList</key>
   <array>
-    <string>append</string>
-    <string>bool</string>
     <string>break</string>
-    <string>byte</string>
-    <string>cap</string>
     <string>case</string>
     <string>chan</string>
-    <string>close</string>
-    <string>complex</string>
-    <string>complex128</string>
-    <string>complex64</string>
     <string>const</string>
     <string>continue</string>
-    <string>copy</string>
     <string>default</string>
     <string>defer</string>
-    <string>delete</string>
     <string>else</string>
-    <string>error</string>
     <string>fallthrough</string>
-    <string>float32</string>
-    <string>float64</string>
     <string>for</string>
     <string>func</string>
     <string>go</string>
     <string>goto</string>
     <string>if</string>
-    <string>iota</string>
-    <string>imag</string>
     <string>import</string>
+    <string>interface</string>
+    <string>map</string>
+    <string>package</string>
+    <string>range</string>
+    <string>return</string>
+    <string>select</string>
+    <string>struct</string>
+    <string>switch</string>
+    <string>type</string>
+    <string>var</string>
+  </array>
+  <key>BBLMPredefinedNameList</key>
+  <array>
+    <string>append</string>
+    <string>cap</string>
+    <string>close</string>
+    <string>complex</string>
+    <string>copy</string>
+    <string>delete</string>
+    <string>false</string>
+    <string>imag</string>
     <string>int</string>
+    <string>iota</string>
+    <string>len</string>
+    <string>make</string>
+    <string>new</string>
+    <string>nil</string>
+    <string>panic</string>
+    <string>print</string>
+    <string>println</string>
+    <string>real</string>
+    <string>recover</string>
+    <string>rune</string>
+    <string>true</string>
+    <string>uint</string>
+    
+<!-- These are covered by completion data for types
+    <string>bool</string>
+    <string>byte</string>
+    <string>complex128</string>
+    <string>complex64</string>
+    <string>error</string>
+    <string>float32</string>
+    <string>float64</string>
     <string>int16</string>
     <string>int32</string>
     <string>int64</string>
     <string>int8</string>
-    <string>interface</string>
-    <string>len</string>
-    <string>make</string>
-    <string>map</string>
-    <string>new</string>
-    <string>package</string>
-    <string>panic</string>
-    <string>print</string>
-    <string>println</string>
-    <string>range</string>
-    <string>real</string>
-    <string>recover</string>
-    <string>return</string>
-    <string>rune</string>
-    <string>select</string>
     <string>string</string>
-    <string>struct</string>
-    <string>switch</string>
-    <string>type</string>
-    <string>uint</string>
     <string>uint16</string>
     <string>uint32</string>
     <string>uint64</string>
     <string>uint8</string>
     <string>uintptr</string>
-    <string>var</string>
-  </array>
-  <key>BBLMPredefinedNameList</key>
-  <array>
-    <string>false</string>
-    <string>nil</string>
-    <string>true</string>
+ -->
+    
   </array>
   <key>BBLMSuffixMap</key>
   <array>
