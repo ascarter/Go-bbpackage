@@ -2197,7 +2197,9 @@ GC	/usr/local/go/src/pkg/runtime/mem.go	75;"	f	line:75
 GCD	/usr/local/go/src/pkg/math/big/int.go	602;"	f	line:602
 GCStats	/usr/local/go/src/pkg/runtime/debug/garbage.go	14;"	t	line:14
 GIF	/usr/local/go/src/pkg/image/gif/reader.go	423;"	t	line:423
+GOARCH	/usr/local/go/src/pkg/runtime/extern.go	205;"	d	line:205
 GOMAXPROCS	/usr/local/go/src/pkg/runtime/debug.go	24;"	f	line:24
+GOOS	/usr/local/go/src/pkg/runtime/extern.go	201;"	d	line:201
 GOROOT	/usr/local/go/src/pkg/runtime/extern.go	184;"	f	line:184
 GUID	/usr/local/go/src/pkg/syscall/ztypes_windows.go	960;"	t	line:960
 Gamma	/usr/local/go/src/pkg/math/gamma.go	122;"	f	line:122
@@ -4253,6 +4255,7 @@ NlMsghdr	/usr/local/go/src/pkg/syscall/ztypes_linux_arm.go	424;"	t	line:424
 Nlist32	/usr/local/go/src/pkg/debug/macho/macho.go	199;"	t	line:199
 Nlist64	/usr/local/go/src/pkg/debug/macho/macho.go	208;"	t	line:208
 NoGoError	/usr/local/go/src/pkg/go/build/build.go	403;"	t	line:403
+NoPos	/usr/local/go/src/pkg/go/token/position.go	80;"	d	line:80
 Node	/usr/local/go/src/pkg/go/ast/ast.go	35;"	t	line:35
 Node	/usr/local/go/src/pkg/go/format/format.go	32;"	f	line:32
 Node	/usr/local/go/src/pkg/text/template/parse/node.go	21;"	t	line:21
