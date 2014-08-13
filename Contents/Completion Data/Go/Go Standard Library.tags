@@ -660,12 +660,12 @@ Close	/usr/local/go/src/pkg/archive/zip/writer.go	39;"	f	line:39
 Close	/usr/local/go/src/pkg/compress/flate/deflate.go	551;"	f	line:551
 Close	/usr/local/go/src/pkg/compress/flate/inflate.go	279;"	f	line:279
 Close	/usr/local/go/src/pkg/compress/gzip/gunzip.go	255;"	f	line:255
-Close	/usr/local/go/src/pkg/compress/gzip/gzip.go	249;"	f	line:249
+Close	/usr/local/go/src/pkg/compress/gzip/gzip.go	250;"	f	line:250
 Close	/usr/local/go/src/pkg/compress/lzw/reader.go	214;"	f	line:214
 Close	/usr/local/go/src/pkg/compress/lzw/writer.go	193;"	f	line:193
 Close	/usr/local/go/src/pkg/compress/lzw/writer.go	29;"	f	line:29
 Close	/usr/local/go/src/pkg/compress/zlib/reader.go	126;"	f	line:126
-Close	/usr/local/go/src/pkg/compress/zlib/writer.go	178;"	f	line:178
+Close	/usr/local/go/src/pkg/compress/zlib/writer.go	179;"	f	line:179
 Close	/usr/local/go/src/pkg/crypto/cipher/io.go	50;"	f	line:50
 Close	/usr/local/go/src/pkg/crypto/tls/conn.go	944;"	f	line:944
 Close	/usr/local/go/src/pkg/database/sql/sql.go	1467;"	f	line:1467
@@ -693,8 +693,8 @@ Close	/usr/local/go/src/pkg/mime/multipart/writer.go	153;"	f	line:153
 Close	/usr/local/go/src/pkg/net/fd_plan9.go	167;"	f	line:167
 Close	/usr/local/go/src/pkg/net/fd_poll_nacl.go	19;"	f	line:19
 Close	/usr/local/go/src/pkg/net/fd_poll_runtime.go	43;"	f	line:43
-Close	/usr/local/go/src/pkg/net/fd_unix.go	179;"	f	line:179
-Close	/usr/local/go/src/pkg/net/fd_windows.go	412;"	f	line:412
+Close	/usr/local/go/src/pkg/net/fd_unix.go	189;"	f	line:189
+Close	/usr/local/go/src/pkg/net/fd_windows.go	419;"	f	line:419
 Close	/usr/local/go/src/pkg/net/http/chunked.go	182;"	f	line:182
 Close	/usr/local/go/src/pkg/net/http/client.go	483;"	f	line:483
 Close	/usr/local/go/src/pkg/net/http/fcgi/child.go	124;"	f	line:124
@@ -880,9 +880,9 @@ ConnectionState	/usr/local/go/src/pkg/crypto/tls/common.go	157;"	t	line:157
 ConnectionState	/usr/local/go/src/pkg/crypto/tls/conn.go	982;"	f	line:982
 ConstantTimeByteEq	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	31;"	f	line:31
 ConstantTimeCompare	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	12;"	f	line:12
-ConstantTimeCopy	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	54;"	f	line:54
+ConstantTimeCopy	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	55;"	f	line:55
 ConstantTimeEq	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	41;"	f	line:41
-ConstantTimeLessOrEq	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	65;"	f	line:65
+ConstantTimeLessOrEq	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	70;"	f	line:70
 ConstantTimeSelect	/usr/local/go/src/pkg/crypto/subtle/constant_time.go	28;"	f	line:28
 ConstraintViolationError	/usr/local/go/src/pkg/crypto/x509/x509.go	527;"	t	line:527
 Contains	/usr/local/go/src/pkg/bytes/bytes.go	81;"	f	line:81
@@ -1100,7 +1100,7 @@ Decrypt	/usr/local/go/src/pkg/crypto/des/cipher.go	69;"	f	line:69
 DecryptOAEP	/usr/local/go/src/pkg/crypto/rsa/rsa.go	457;"	f	line:457
 DecryptPEMBlock	/usr/local/go/src/pkg/crypto/x509/pem_decrypt.go	112;"	f	line:112
 DecryptPKCS1v15	/usr/local/go/src/pkg/crypto/rsa/pkcs1v15.go	52;"	f	line:52
-DecryptPKCS1v15SessionKey	/usr/local/go/src/pkg/crypto/rsa/pkcs1v15.go	77;"	f	line:77
+DecryptPKCS1v15SessionKey	/usr/local/go/src/pkg/crypto/rsa/pkcs1v15.go	80;"	f	line:80
 DeepEqual	/usr/local/go/src/pkg/reflect/deepequal.go	135;"	f	line:135
 Default	/usr/local/go/src/pkg/go/build/build.go	258;"	v	line:258
 DefaultClient	/usr/local/go/src/pkg/net/http/client.go	75;"	v	line:75
@@ -5144,8 +5144,8 @@ Read	/usr/local/go/src/pkg/mime/multipart/multipart.go	131;"	f	line:131
 Read	/usr/local/go/src/pkg/mime/multipart/multipart.go	141;"	f	line:141
 Read	/usr/local/go/src/pkg/mime/multipart/quotedprintable.go	70;"	f	line:70
 Read	/usr/local/go/src/pkg/net/fd_plan9.go	126;"	f	line:126
-Read	/usr/local/go/src/pkg/net/fd_unix.go	219;"	f	line:219
-Read	/usr/local/go/src/pkg/net/fd_windows.go	442;"	f	line:442
+Read	/usr/local/go/src/pkg/net/fd_unix.go	229;"	f	line:229
+Read	/usr/local/go/src/pkg/net/fd_windows.go	449;"	f	line:449
 Read	/usr/local/go/src/pkg/net/http/chunked.go	70;"	f	line:70
 Read	/usr/local/go/src/pkg/net/http/client.go	475;"	f	line:475
 Read	/usr/local/go/src/pkg/net/http/httputil/chunked.go	70;"	f	line:70
@@ -5658,7 +5658,7 @@ S0	/usr/local/go/src/pkg/go/doc/testdata/error2.go	20;"	t	line:20
 SID	/usr/local/go/src/pkg/syscall/security_windows.go	103;"	t	line:103
 SIDAndAttributes	/usr/local/go/src/pkg/syscall/security_windows.go	281;"	t	line:281
 SIO_GET_INTERFACE_LIST	/usr/local/go/src/pkg/syscall/ztypes_windows.go	723;"	d	line:723
-SOCK_RAW	/usr/local/go/src/pkg/net/fd_windows.go	605;"	t	line:605
+SOCK_RAW	/usr/local/go/src/pkg/net/fd_windows.go	612;"	t	line:612
 SRV	/usr/local/go/src/pkg/net/dnsclient.go	166;"	t	line:166
 SSLExtraCertChainPolicyPara	/usr/local/go/src/pkg/syscall/ztypes_windows.go	886;"	t	line:886
 ST_BIND	/usr/local/go/src/pkg/debug/elf/elf.go	1375;"	f	line:1375
@@ -6346,7 +6346,7 @@ Sign	/usr/local/go/src/pkg/crypto/dsa/dsa.go	194;"	f	line:194
 Sign	/usr/local/go/src/pkg/crypto/ecdsa/ecdsa.go	101;"	f	line:101
 Sign	/usr/local/go/src/pkg/math/big/int.go	32;"	f	line:32
 Sign	/usr/local/go/src/pkg/math/big/rat.go	272;"	f	line:272
-SignPKCS1v15	/usr/local/go/src/pkg/crypto/rsa/pkcs1v15.go	181;"	f	line:181
+SignPKCS1v15	/usr/local/go/src/pkg/crypto/rsa/pkcs1v15.go	194;"	f	line:194
 SignPSS	/usr/local/go/src/pkg/crypto/rsa/pss.go	238;"	f	line:238
 Signal	/usr/local/go/src/pkg/os/doc.go	50;"	f	line:50
 Signal	/usr/local/go/src/pkg/os/exec.go	61;"	t	line:61
@@ -7726,7 +7726,7 @@ Verify	/usr/local/go/src/pkg/net/smtp/smtp.go	164;"	f	line:164
 VerifyHostname	/usr/local/go/src/pkg/crypto/tls/conn.go	1014;"	f	line:1014
 VerifyHostname	/usr/local/go/src/pkg/crypto/x509/verify.go	381;"	f	line:381
 VerifyOptions	/usr/local/go/src/pkg/crypto/x509/verify.go	128;"	t	line:128
-VerifyPKCS1v15	/usr/local/go/src/pkg/crypto/rsa/pkcs1v15.go	218;"	f	line:218
+VerifyPKCS1v15	/usr/local/go/src/pkg/crypto/rsa/pkcs1v15.go	231;"	f	line:231
 VerifyPSS	/usr/local/go/src/pkg/crypto/rsa/pss.go	259;"	f	line:259
 Version	/usr/local/go/src/pkg/debug/elf/elf.go	64;"	t	line:64
 Version	/usr/local/go/src/pkg/runtime/extern.go	195;"	f	line:195
@@ -7880,8 +7880,8 @@ Write	/usr/local/go/src/pkg/io/pipe.go	160;"	f	line:160
 Write	/usr/local/go/src/pkg/log/syslog/syslog.go	178;"	f	line:178
 Write	/usr/local/go/src/pkg/mime/multipart/writer.go	175;"	f	line:175
 Write	/usr/local/go/src/pkg/net/fd_plan9.go	142;"	f	line:142
-Write	/usr/local/go/src/pkg/net/fd_unix.go	307;"	f	line:307
-Write	/usr/local/go/src/pkg/net/fd_windows.go	485;"	f	line:485
+Write	/usr/local/go/src/pkg/net/fd_unix.go	317;"	f	line:317
+Write	/usr/local/go/src/pkg/net/fd_windows.go	492;"	f	line:492
 Write	/usr/local/go/src/pkg/net/http/cgi/child.go	182;"	f	line:182
 Write	/usr/local/go/src/pkg/net/http/chunked.go	160;"	f	line:160
 Write	/usr/local/go/src/pkg/net/http/fcgi/child.go	87;"	f	line:87
