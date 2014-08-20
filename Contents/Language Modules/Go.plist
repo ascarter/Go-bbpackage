@@ -74,9 +74,7 @@
     <string>recover</string>
     <string>rune</string>
     <string>true</string>
-    <string>uint</string>
-    
-<!-- These are covered by completion data for types
+    <!-- Default types -->
     <string>bool</string>
     <string>byte</string>
     <string>complex128</string>
@@ -89,13 +87,12 @@
     <string>int64</string>
     <string>int8</string>
     <string>string</string>
+    <string>uint</string>
     <string>uint16</string>
     <string>uint32</string>
     <string>uint64</string>
     <string>uint8</string>
     <string>uintptr</string>
- -->
-    
   </array>
   <key>BBLMSuffixMap</key>
   <array>
