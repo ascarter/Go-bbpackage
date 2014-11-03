@@ -135,10 +135,10 @@
     
     <key>Comment Pattern</key>
     <string><![CDATA[
-      (?x:
-          (\/\/.*?$) |               (?# Line comment)
-          (^/\*(?s:.*?)(?:\*/ | \z)) (?# Block comment)
-      )]]>
+        (?x:
+            (//.*$)        | (?# Line comment)
+            (?s:/\*.*?\*/)   (?# Block comment)
+        )]]>
     </string>
     
     <key>Skip Pattern</key>
@@ -208,7 +208,7 @@
             (?>
               (?> \s+ )
             )
-          )?
+          )*
           (?# body)
           (?P<braces>
             {
