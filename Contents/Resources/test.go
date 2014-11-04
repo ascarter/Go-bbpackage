@@ -49,3 +49,19 @@ func bar() {
 func (p *parser) init(fset *token.Fileset, filename string, src []byte) (ret int) {
 	p.file = fset.Addfile(filename, -1, len(src))
 }
+
+func (t *Thing) makeInChan(c <-chan int) <-chan int {
+	out := make(chan int)
+	return out
+}
+
+func (t *Thing) makeOutChan(c <-chan int) chan<- int {
+	out := make(chan int)
+	return out
+}
+
+func (t *Thing) makeChannels(in <-chan int, out chan<- int) (<-chan int, chan<- int) {
+	out := make(chan int)
+	return out
+}
+
