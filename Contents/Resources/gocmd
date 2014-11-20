@@ -18,9 +18,6 @@ else
     ARGS=${PKG_PATH}
 fi
 
-if [ -n "`which go`" ]; then
-    cd $GOPKGROOT
-    GOPATH=$GOPKGROOT go ${CMD} ${FLAGS} ${ARGS}
-else
-    printf "Go is not installed.\n\nDownload installer from http://golang.org/dl/"
-fi
+# Run go tool
+cd $GOPKGROOT
+GOPATH=$GOPKGROOT go ${CMD} ${FLAGS} ${ARGS}

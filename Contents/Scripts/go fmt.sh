@@ -1,3 +1,5 @@
 #!/bin/sh
 
-../Resources/gocmd fmt ${BB_DOC_PATH}
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+GOCMD="`dirname "${SCRIPT_PATH}"`/../Resources/gocmd"
+"${GOCMD}" fmt "${BB_DOC_PATH}"

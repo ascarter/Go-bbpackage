@@ -1,3 +1,5 @@
 #!/bin/sh
 
-../Resources/gocmd clean ${BB_DOC_PATH}
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+GOCMD="`dirname "${SCRIPT_PATH}"`/../Resources/gocmd"
+"${GOCMD}" clean "${BB_DOC_PATH}"

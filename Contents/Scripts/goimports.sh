@@ -7,11 +7,11 @@ DOC=`basename "${BB_DOC_PATH}"`
 DOC_PATH=`dirname "${BB_DOC_PATH}"`
 GOPKGROOT=`upsearch "${DOC_PATH}" src`
 PKG_PATH=`echo ${DOC_PATH#$GOPKGROOT/src/}`
-GOLINT=${GOPKGROOT}/bin/golint
+GOIMPORTS=${GOPKGROOT}/bin/goimports
 
-if [ -x "${GOLINT}" ]; then
+if [ -x "${GOIMPORTS}" ]; then
     cd ${GOPKGROOT}/src
-    GOPATH=${GOPKGROOT} ${GOLINT} "${PKG_PATH}/${DOC}"
+    GOPATH=${GOPKGROOT} ${GOIMPORTS} -w "${PKG_PATH}/${DOC}"
 else
-    printf "The package golint is not installed\n\nInstall golint with following command:\n\tgo get github.com/golang/lint/golint"
+    printf "The package goimports is not installed\n\nInstall goimports with following command:\n\tgo get golang.org/x/tools/cmd/goimports"
 fi
