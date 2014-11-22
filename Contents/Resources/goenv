@@ -1,0 +1,267 @@
+#  -*- mode: unix-shell-script; -*-
+
+_goenv_help() {
+    print "Go workspace manager\n"
+    print "Usage:\n"
+    print "\tgoenv command [arguments]\n"
+    print "The commands are:\n"
+    print "\trun       detects go path and runs command in that environment"
+    print "\tinit      initialize path as workspace (default working directory)"
+    print "\tswitch    switch workspace to path (default to working directory)"
+    print "\tadd       add path to workspace (default working directory)"
+    print "\trm        remove path from workspace (default working directory)"
+    print "\treset     reset to empty workspace"
+    print "\tbootstrap install default packages (defined in .goenvrc)"
+    print "\tlist      list all workspace paths"
+    print "\twhich     show current Go workspace"
+    print "\tenv       environment variables for workspace"
+    print "\ngoenv manages the workspace by setting the GOPATH environment variable"
+    print "When setting or adding a workspace, goenv will search up the path"
+    print "to find the parent with the required GOPATH entries of bin, pkg, and"
+    print "src"
+}
+
+_goenv_read_config() {
+	rcfiles=(/usr/etc/goenvrc /usr/local/etc/goenvrc ~/.goenvrc ./.goenvrc)
+	packages=()
+	
+	for rc in ${rcfiles[*]}
+	do
+		if [ -e $rc ]
+		then
+			while read line
+			do
+				packages=("${packages[@]}" $line)
+			done <$rc
+		fi
+	done
+}
+
+_goenv_fullpath() {
+  case "$1" in
+    /*)
+        echo "$1"
+        ;;
+    *)
+        echo "$PWD/$1"
+        ;;
+  esac
+}
+
+_goenv_find_ws_path() {
+    local WSPATH=$(pwd)
+    while [[ "$WSPATH" != "" && ! -e "$WSPATH/bin" && ! -e "$WSPATH/pkg" && ! -e "$WSPATH/src" ]]
+    do
+        WSPATH=${WSPATH%/*}
+    done
+    echo "$WSPATH"
+}
+
+_goenv_split() {
+    OLDIFS="$IFS"
+    IFS=$2
+    items=(`echo $1`)
+    IFS="$OLDIFS"
+    echo $items
+}
+
+_goenv_init() {
+    if [ -n "$1" ]; then
+        mkdir -p $1/bin
+        mkdir -p $1/pkg
+        mkdir -p $1/src
+        _goenv_add $1
+		_goenv_bootstrap
+    else
+        print "Path does not exist"
+    fi
+}
+
+_goenv_switch() {
+    if [[ -n "$1" && -d "$1" ]]; then
+        if [ -n "$GOPATH" ]
+        then
+            _goenv_reset
+        fi
+    
+        # Cache the original path
+        _GOENV_OLD_PATH=$PATH
+        export _GOENV_OLD_PATH
+
+        # Set GOPATH    
+        GOPATH=$1
+        export GOPATH
+        PATH=$PATH:$GOPATH/bin
+        export PATH
+    else
+        print "Go workspace missing"
+    fi
+}
+
+_goenv_add() {
+    if [[ -n "$1" && -d "$1" ]]; then
+        if [[ -n "$GOPATH" && "$GOPATH" =~  (^|:)"$1"(:|$) ]]
+        then
+            print "Workspace already added"
+        elif [ -z "$_GOENV_OLD_PATH" ]
+        then
+            _goenv_switch $1
+        else
+            GOPATH=$GOPATH:$1
+            export GOPATH
+            PATH=$_GOENV_OLD_PATH:${GOPATH//://bin:}/bin
+        fi
+    else
+        print "Go workspace missing"
+    fi
+}
+
+_goenv_rm() {
+    if [[ -n "$1" && -d "$1" && -n "$GOPATH" && "$GOPATH" =~  (^|:)"$1"(:|$) ]]; then
+        local items=$GOPATH
+        _goenv_reset
+        items=(`_goenv_split $items ":"`)
+        for item in "${items[@]}"
+        do
+            if [ "$item" != "$1" ]
+            then
+                _goenv_add $item
+            fi
+        done
+    else
+        print "Go workspace missing"
+    fi
+}
+
+_goenv_reset() {
+    if [ -n "$GOPATH" ]
+    then
+        if [ -n "$_GOENV_OLD_PATH" ]
+        then
+            PATH=$_GOENV_OLD_PATH
+            export PATH
+            unset _GOENV_OLD_PATH
+        fi
+        unset GOPATH
+    else
+        print "Go workspace not set"
+    fi
+}
+
+_goenv_list() {    
+    if [[ -n "$GOPATH" ]]
+    then
+        items=(`_goenv_split $GOPATH ":"`)
+        for item in "${items[@]}"
+        do
+          print "$item"
+        done
+    else
+        print "Go workspace not set"
+    fi
+}
+
+_goenv_which() {
+    echo `_goenv_find_ws_path`
+}
+
+_goenv_env() {
+        print "GOPATH=$GOPATH"
+        print "GOROOT=$GOROOT"        
+}
+
+_goenv_bootstrap() {
+	for pkg in ${packages[*]}
+	do
+		print "Getting package $pkg"
+		go get "${pkg}"
+	done
+}
+_goenv_exec() {
+    case "$1" in
+    init)
+        if [ -z "$2" ]
+        then
+            _goenv_init $(pwd)
+        else
+            _goenv_init `_goenv_fullpath $2`
+        fi
+        ;;
+    switch)
+        if [ -z "$2" ]
+        then
+            _goenv_switch `_goenv_find_ws_path`
+        else
+            _goenv_switch `_goenv_fullpath $2`
+        fi
+        ;;
+    add)
+        if [ -z "$2" ]
+        then
+            _goenv_add `_goenv_find_ws_path`
+        else
+            _goenv_add `_goenv_fullpath $2`
+        fi
+        ;;
+    rm)
+        if [ -z "$2" ]
+        then
+            _goenv_rm `_goenv_find_ws_path`
+        else
+            _goenv_rm `_goenv_fullpath $2`
+        fi
+        ;;
+    *)
+        print "Invalid command"
+    esac
+}
+
+goenv() {
+    cmd=$1
+    
+    _goenv_read_config
+    
+    case "$cmd" in
+    run)
+    	shift
+    	(
+    		_goenv_exec "switch"
+    		if [ 0 -eq $? ]
+    		then
+    			"$@"
+    		fi
+    	)
+    	;;
+    init | switch | add | rm)
+        shift
+        if [ $# -gt 0 ]
+        then
+            while (($#))
+            do
+                _goenv_exec $cmd $1
+                shift
+            done
+        else
+            _goenv_exec $cmd
+        fi
+        ;;
+    reset)
+        _goenv_reset
+        ;;
+    list)
+        _goenv_list
+        ;;
+    which)
+        _goenv_which
+        ;;
+    env)
+        _goenv_env
+        ;;
+    bootstrap)
+    	_goenv_bootstrap
+    	;;
+    help | *)
+        _goenv_help
+        ;;
+    esac
+}
