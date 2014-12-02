@@ -29,7 +29,7 @@ clean:
 install: all
 	open .
 
-# Run BBEdit maketags on Go standard library (exported classes only)
+# Run BBEdit maketags on Go standard library (exported only)
 tags:
 	$(CTAGS) --recurse --langdef=GoStdLib --langmap=GoStdLib:.go \
 		--regex-GoStdLib="/func([ \t]+\([^)]+\))?[ \t]+([A-Z][a-zA-Z0-9_]+)/\2/f,func/" \
