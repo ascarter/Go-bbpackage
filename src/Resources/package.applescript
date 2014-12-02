@@ -53,13 +53,13 @@ on packagePath(doc)
 	return quoted form of exec(doc, "go list")
 end packagePath
 
-# Parse message into result browser entry
-#
-# Format:
-#     [/path/to/file]:[line]:(col): [message]
+-- Parse message into result browser entry
+--
+-- Format:
+--     [/path/to/file]:[line]:(col): [message]
 on makeEntry(itemData, cwd)
 	try
-		# Get source path
+		-- Get source path
 		set src to text 1 thru ((offset of ":" in itemData) - 1) of itemData
 		if src starts with "./" then
 			set srcFile to POSIX file (cwd & text 3 thru -1 of src)
@@ -67,23 +67,23 @@ on makeEntry(itemData, cwd)
 			set srcFile to POSIX file (src)
 		end if
 		
-		# Get line:column
+		-- Get line:column
 		set lineColumn to text ((offset of ":" in itemData) + 1) thru ((offset of ": " in itemData) - 1) of itemData
 		set lineNumber to (text 1 thru ((offset of ":" in lineColumn) - 1) of lineColumn) as number
 		set columnNumber to (text ((offset of ":" in lineColumn) + 1) thru -1 of lineColumn) as number
 		
-		# Get message
+		-- Get message
 		set msg to text ((offset of ": " in itemData) + 2) thru -1 of itemData
 		
 		tell application "BBEdit"
 			set resultKind to error_kind
-			#	if resultType is "note" then
-			#		set resultKind to note_kind
-			#	else if resultType is "warning" then
-			#		set resultKind to warning_kind
-			#	else
-			#		set resultKind to error_kind
-			#	end if
+			--	if resultType is "note" then
+			--		set resultKind to note_kind
+			--	else if resultType is "warning" then
+			--		set resultKind to warning_kind
+			--	else
+			--		set resultKind to error_kind
+			--	end if
 			
 			set entry to {result_kind:resultKind, result_file:srcFile, result_line:lineNumber, message:msg}
 		end tell
