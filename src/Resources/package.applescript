@@ -77,6 +77,12 @@ on makeEntry(itemData, cwd)
 		
 		tell application "BBEdit"
 			set resultKind to error_kind
+			
+			-- TODO: Improve filter for warnings vs errors
+			if "should" is in msg then
+				set resultKind to warning_kind
+			end if
+			
 			--	if resultType is "note" then
 			--		set resultKind to note_kind
 			--	else if resultType is "warning" then
