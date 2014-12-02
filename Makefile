@@ -19,7 +19,7 @@ TAGFILE := Contents/Completion\ Data/Go/Go\ Standard\ Library.tags
 
 .PHONY: all clean install
 
-all: $(OBJECTS) tags
+all: $(OBJECTS) $(TAGFILE)
 
 clean:
 	-rm -f $(subst _,\ ,$(OBJECTS))
@@ -29,8 +29,7 @@ clean:
 install: all
 	open .
 
-# Run BBEdit maketags on Go standard library (exported only)
-tags:
+$(TAGFILE):
 	$(CTAGS) --recurse --langdef=GoStdLib --langmap=GoStdLib:.go \
 		--regex-GoStdLib="/func([ \t]+\([^)]+\))?[ \t]+([A-Z][a-zA-Z0-9_]+)/\2/f,func/" \
 		--regex-GoStdLib="/var[ \t]+([A-Z][a-zA-Z0-9_]+)/\1/v,var/" \
