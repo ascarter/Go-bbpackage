@@ -11,7 +11,6 @@ on run argv
 		error "Usage: bbresults [title] [doc] [messages]"
 	end if
 	
-	
 	set title to ((item 1 of argv) as string)
 	set doc to POSIX file ((item 2 of argv) as string)
 	set messages to (item 3 of argv)
