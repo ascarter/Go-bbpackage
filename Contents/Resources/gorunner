@@ -3,76 +3,29 @@
 #
 # Shell runner for Go commands
 #
-
-usage() {
-	cat << EOF
-Usage: ${0##*/} [-s] [-t title] [-d document] [command]
-Run command in go workspace context inferred from document
-
-	-h help
-	-s show results
-	-t title for results
-	-d document (default is environment variable BB_DOC_PATH)
-EOF
-}
+# Assumed to be run by BBEdit scripts with BB_DOC_PATH set to the document
 
 # Add goenv to shell environment
 source "$(dirname "$0")/goenv"
-
-# Support for showing results
-RESULTS_CMD="$(dirname "$0")/show_results.applescript"
 
 # Add Go to the path
 if [ -d /usr/local/go ]
 then
 	export PATH=/usr/local/go/bin:${PATH}
+elif [ -d /opt/go ]
+then
+	export PATH=/opt/go/bin:${PATH}
 else
 	echo "Go is not installed" >&2
 	exit -1
 fi 
 
-doc_path="${BB_DOC_PATH}"
-show_results=0
-title="gorunner"
-
-OPTIND=1
-while getopts "hst:d:" opt
-do
-	case "$opt" in
-		h)
-			usage
-			exit 0
-			;;
-		s)
-			show_results=1
-			;;
-		t)
-			title=$OPTARG
-			;;
-		d)
-			doc_path=$OPTARG
-			;;
-		'?')
-			usage >&2
-			exit 1
-			;;
-	esac
-done
-shift "$((OPTIND-1))"
-
 # Check that document was provided
-if [ -z "$doc_path" ]
+if [ -z "$BB_DOC_PATH" ]
 then
 	echo "Document missing" >&2
 	exit 1
 fi
 
-results=$(cd $(dirname "$doc_path") && goenv run $* 2>&1)
-
-if [ $show_results == 1 ]
-then
-	"$RESULTS_CMD" "$title" "$doc_path" "$results"
-else
-	echo "$results"
-fi
-
+cd $(dirname "$BB_DOC_PATH")
+goenv run $*

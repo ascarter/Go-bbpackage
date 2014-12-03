@@ -34,17 +34,24 @@ on exec(doc, cmd)
 	end if
 	
 	set runner to quoted form of (POSIX path of (packageRoot as string) & "Contents/Resources/gorunner")
-	set shellCmd to runner & space & "-d " & POSIX path of ((file of doc) as alias) & space & cmd
+	set envVars to "BB_DOC_PATH=" & POSIX path of ((file of doc) as alias)
+	set shellCmd to envVars & space & runner & space & cmd
 	return do shell script (shellCmd)
 end exec
 
 on execCommands(doc, commands)
 	set output to {}
 	repeat with cmd in commands
-		set entry to exec(doc, cmd)
-		if length of entry > 0 then
-			copy entry to the end of output
-		end if
+		try
+			set entry to exec(doc, cmd)
+			if length of entry > 0 then
+				copy entry to the end of output
+			end if
+		on error msg
+			if length of msg > 0 then
+				copy msg to the end of output
+			end if
+		end try
 	end repeat
 	return output
 end execCommands
@@ -69,8 +76,15 @@ on makeEntry(itemData, cwd)
 		
 		-- Get line:column
 		set lineColumn to text ((offset of ":" in itemData) + 1) thru ((offset of ": " in itemData) - 1) of itemData
-		set lineNumber to (text 1 thru ((offset of ":" in lineColumn) - 1) of lineColumn) as number
-		set columnNumber to (text ((offset of ":" in lineColumn) + 1) thru -1 of lineColumn) as number
+		if lineColumn contains "." and lineColumn contains "-" then
+			-- line.col-line.col
+			set lineNumber to (text 1 thru ((offset of "." in lineColumn) - 1) of lineColumn) as number
+			set columnNumber to (text ((offset of "." in lineColumn) + 1) thru ((offset of "-" in lineColumn) - 1) of lineColumn) as number
+		else
+			-- line:col
+			set lineNumber to (text 1 thru ((offset of ":" in lineColumn) - 1) of lineColumn) as number
+			set columnNumber to (text ((offset of ":" in lineColumn) + 1) thru -1 of lineColumn) as number
+		end if
 		
 		-- Get message
 		set msg to text ((offset of ": " in itemData) + 2) thru -1 of itemData
@@ -137,23 +151,28 @@ on showResults(title, doc, messages)
 	end if
 end showResults
 
-on handleDocumentDidSave(doc)
+on documentWillSave(doc)
+	return
+end documentWillSave
+
+on documentDidSave(doc)
 	try
 		set docPath to POSIX path of ((file of doc) as string)
 		set pkgPath to packagePath(doc)
-		set goCommands to {"goimports -w " & quoted form of docPath, "golint " & quoted form of docPath, "go build", "go test"}
+		set goCommands to {"goimports -w " & quoted form of docPath, "golint " & quoted form of docPath, "go build"}
 		set output to execCommands(doc, goCommands)
 		if output is not missing value then
 			showResults("Save " & (name of doc), POSIX file (docPath), output)
 		end if
 	on error msg
-		log "Error handleDocumentDidSave: " & msg
+		log "Error documentDidSave: " & msg
 	end try
-end handleDocumentDidSave
+end documentDidSave
 
 (*
 on run
 	tell application "BBEdit" to set doc to active document of window 1
-	handleDocumentDidSave(doc)
+	documentWillSave(doc)
+	documentDidSave(doc)
 end run
 *)

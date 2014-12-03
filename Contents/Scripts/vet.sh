@@ -1,4 +1,6 @@
 #! /bin/sh
 
 gorunner="$(dirname "$0")/../Resources/gorunner"
-"$gorunner" -s -t "go vet" go vet
+goresults="$(dirname "$0")/../Resources/show_results.applescript"
+
+"$goresults" "go vet" "$BB_DOC_PATH" "$("$gorunner" go vet 2>&1)"
