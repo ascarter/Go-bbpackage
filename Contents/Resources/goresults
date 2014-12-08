@@ -18,41 +18,28 @@ class Entry
   # Parse result line
   def parse(cwd, line)   
     parts = line.split(":")
-    if parts.length < 4
-      return false
-    end
-
-    part = parts.shift
+    return false if parts.length < 4
     
     # Set result kind
-    @kind = part
-    if not ["error", "warning", "note"].include?(@kind) then
-      return false
-    end
+    @kind = parts.shift
+    return false if not ["error", "warning", "note"].include?(@kind)
     
     # Set file path
-    part = parts.shift
-    filename = part.sub(/^[.][\/]/,"")
+    filename = parts.shift.sub(/^[.][\/]/,"")
     filename.prepend("#{cwd}/") if not filename.start_with?("/")
     @file = File.expand_path(filename)
-    if !File.file?(@file)
-      return false
-    end
+    return false if !File.file?(@file)
     
     # Set line and column
     if parts.length == 2
-      part = parts.shift
-      @line = part
+      @line = parts.shift
     else
-      part = parts.shift
-      @line = part
-      part = parts.shift
-      @column = part
+      @line = parts.shift
+      @column = parts.shift
     end
     
     # Set message
-    part = parts.shift
-    @message = part.strip()
+    @message = parts.shift.strip()
     
     return true
   end
@@ -68,27 +55,14 @@ class Entry
 end
 
 def showResults(title, entries)  
-  if entries.length == 0
-    return
-  end
-  
-  # Sort and filter entries
-  entries.sort_by! { |e| e.to_s }
-  entries.uniq! { |e| e.id }
-  
-  script = <<-eos
-tell application "BBEdit"
-    set resultsData to {#{entries.join(",")}}
-    make new results browser with data resultsData with properties {name:"#{title}"}
-    return
-end tell
-eos
-  cmd = "osascript -l AppleScript - <<SCRIPT\n" + script + "SCRIPT"
-  system(cmd)
+  return if entries.length == 0  
+  script = "tell me to tell application \"BBEdit\" to make new results browser with data {#{entries.join(",")}} with properties {name:\"#{title}\"}"
+  IO.popen("osascript -l AppleScript -e '#{script}'")
 end
 
 # Read options
 options = {
+  :show => false,
   :title => "goresults",
   :cwd => Dir.pwd 
 }
@@ -96,6 +70,9 @@ options = {
 opt_parser = OptionParser.new do |opts|
   opts.banner = "Usage: goresults [options]"
   opts.separator ""
+  opts.on("-s", "--show", "Show results browser") do |s|
+    options[:show] = true
+  end
   opts.on("-t", "--title TITLE", "Set title") do |t|
     options[:title] = t
   end
@@ -120,5 +97,13 @@ STDIN.readlines.each do |line|
   end
 end
 
+# Sort and filter entries
+entries.sort_by! { |e| e.to_s }
+entries.uniq! { |e| e.id }
+
 # Display results browser
-showResults(options[:title], entries)
+if options[:show]
+  showResults(options[:title], entries)
+else
+  entries.each { |e| STDOUT.puts e.to_s }
+end
