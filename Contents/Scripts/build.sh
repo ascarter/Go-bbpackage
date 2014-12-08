@@ -1,6 +1,4 @@
 #! /bin/sh
 
-gorunner="$(dirname "$0")/../Resources/gorunner"
-goresults="$(dirname "$0")/../Resources/show_results.applescript"
-
-"$goresults" "go build" "$BB_DOC_PATH" "$("$gorunner" go build $("$gorunner" go list) 2>&1)"
+PATH="$(dirname "$0")/../Resources":$PATH
+(gorunner go build $(gorunner go list) 2>&1) | awk '{print "error:" $0}' | goresults -t "go build"

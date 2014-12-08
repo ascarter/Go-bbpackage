@@ -1,0 +1,124 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+# Show results browser for each entry on stdin
+# Format:
+#   [error|warning|note]:[path]:[line]:[col]: [msg]
+
+class Entry
+  def initialize(kind="error", file=nil, line = nil, column = nil, message = "")
+    @kind = kind
+    @file = file
+    @line = line
+    @column = column
+    @message = message
+  end
+  
+  # Parse result line
+  def parse(cwd, line)   
+    parts = line.split(":")
+    if parts.length < 4
+      return false
+    end
+
+    part = parts.shift
+    
+    # Set result kind
+    @kind = part
+    if not ["error", "warning", "note"].include?(@kind) then
+      return false
+    end
+    
+    # Set file path
+    part = parts.shift
+    filename = part.sub(/^[.][\/]/,"")
+    filename.prepend("#{cwd}/") if not filename.start_with?("/")
+    @file = File.expand_path(filename)
+    if !File.file?(@file)
+      return false
+    end
+    
+    # Set line and column
+    if parts.length == 2
+      part = parts.shift
+      @line = part
+    else
+      part = parts.shift
+      @line = part
+      part = parts.shift
+      @column = part
+    end
+    
+    # Set message
+    part = parts.shift
+    @message = part.strip()
+    
+    return true
+  end
+  
+  def to_s()
+    return "{result_kind:#{@kind}_kind, result_file:POSIX file \"#{@file}\", result_line:#{@line}, message: \"#{@message}\"}"
+  end
+  
+  # id is a form of a key that disregards kind so that uniq can be used to filter
+  def id()
+    return "#{@file}:#{@line}:#{@message}"
+  end
+end
+
+def showResults(title, entries)  
+  if entries.length == 0
+    return
+  end
+  
+  # Sort and filter entries
+  entries.sort_by! { |e| e.to_s }
+  entries.uniq! { |e| e.id }
+  
+  script = <<-eos
+tell application "BBEdit"
+    set resultsData to {#{entries.join(",")}}
+    make new results browser with data resultsData with properties {name:"#{title}"}
+    return
+end tell
+eos
+  cmd = "osascript -l AppleScript - <<SCRIPT\n" + script + "SCRIPT"
+  system(cmd)
+end
+
+# Read options
+options = {
+  :title => "goresults",
+  :cwd => Dir.pwd 
+}
+
+opt_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: goresults [options]"
+  opts.separator ""
+  opts.on("-t", "--title TITLE", "Set title") do |t|
+    options[:title] = t
+  end
+  opts.on("-d", "--dir DIR", "Set working directory") do |d|
+    options[:cwd] = File.expand_path(d)
+  end
+end
+opt_parser.parse!
+
+# Get document root
+if ENV.include?("BB_DOC_PATH")
+  # Set working directory to doc path directory
+  options[:cwd] = File.dirname(ENV["BB_DOC_PATH"])
+end
+
+# Read entries from stdin
+entries = []
+STDIN.readlines.each do |line|
+  entry = Entry.new()
+  if entry.parse(options[:cwd], line)
+    entries.push entry
+  end
+end
+
+# Display results browser
+showResults(options[:title], entries)

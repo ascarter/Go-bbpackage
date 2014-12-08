@@ -1,4 +1,4 @@
 #! /bin/sh
 
-gorunner="$(dirname "$0")/../Resources/gorunner"
-"$gorunner" go run "$BB_DOC_PATH"
+PATH="$(dirname "$0")/../Resources":$PATH
+gorunner go run "$BB_DOC_PATH"

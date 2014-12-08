@@ -1,4 +1,4 @@
 #! /bin/sh
 
-gorunner="$(dirname "$0")/../Resources/gorunner"
-"$gorunner" go test $("$gorunner" go list)
+PATH="$(dirname "$0")/../Resources":$PATH
+gorunner go test $(gorunner go list)

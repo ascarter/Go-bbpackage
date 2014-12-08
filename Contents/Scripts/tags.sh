@@ -1,11 +1,11 @@
 #! /bin/sh
 
-gorunner="$(dirname "$0")/../Resources/gorunner"
+PATH="$(dirname "$0")/../Resources":$PATH
 CTAGS=/Applications/BBEdit.app/Contents/Helpers/ctags
+CTAGS_ARGS="--recurse --fields=+a+m+n+S --excmd=number --tag-relative=no"
 ctags_defs="$(dirname "$0")/../Resources/ctags"
 
-cd $("$gorunner" pwd)
-CTAGS_ARGS="--recurse --fields=+a+m+n+S --excmd=number --tag-relative=no"
+cd $(gorunner pwd)
 
 # Check to see if Go is missing
 $CTAGS --list-languages | grep Go > /dev/null
