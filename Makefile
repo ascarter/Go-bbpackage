@@ -38,4 +38,5 @@ $(TAGFILE):
 		--regex-GoStdLib="/const[ \t]+([A-Z][a-zA-Z0-9_]+)[ \t]+.*\=[ \t]+(.*)/\1/d,constant/" \
 		--languages=GoStdLib --fields=+a+m+n+S --excmd=number --tag-relative=no \
 		--exclude="*_test.go" -f $(TAGOBJ) $(GOROOT)/src/pkg
+	mkdir -p Contents/Completion\ Data/Go
 	mv $(TAGOBJ) $(TAGFILE)

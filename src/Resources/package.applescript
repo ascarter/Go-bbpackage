@@ -2,6 +2,7 @@
 
 property package : "Go"
 property packageRoot : missing value
+property results : {}
 
 -- Get working directory for a given document
 on getWorkingDirectory(doc)
@@ -22,7 +23,17 @@ on getPackageRoot()
 	return POSIX path of (cwd as string)
 end getPackageRoot
 
-on exec(doc, cmd)
+on execStdIn(input, cmd)
+	set prevDelimiter to AppleScript's text item delimiters
+	set AppleScript's text item delimiters to {ASCII character 10}
+	set output to do shell script ("echo " & quoted form of (input as string) & " | " & cmd)
+	set AppleScript's text item delimiters to {ASCII character 13}
+	set outputList to paragraphs of output
+	set AppleScript's text item delimiters to prevDelimiter
+	return outputList
+end execStdIn
+
+on execGoRunner(doc, prefix, cmd)
 	tell application "BBEdit"
 		if source language of doc is not "Go" then
 			error "Not a Go source file"
@@ -36,14 +47,25 @@ on exec(doc, cmd)
 	set runner to quoted form of (POSIX path of (packageRoot as string) & "Contents/Resources/gorunner")
 	set envVars to "BB_DOC_PATH=" & POSIX path of ((file of doc) as alias)
 	set shellCmd to envVars & space & runner & space & cmd
+	if prefix is not missing value then
+		set shellCmd to prefix & " | " & shellCmd
+	end if
 	return do shell script (shellCmd)
-end exec
+end execGoRunner
+
+on execCommand(doc, cmd)
+	return execGoRunner(doc, missing value, cmd)
+end execCommand
+
+on execCommandWithPrefix(doc, prefix, cmd)
+	return execGoRunner(doc, prefix, cmd)
+end execCommandWithPrefix
 
 on execCommands(doc, commands)
 	set output to {}
 	repeat with cmd in commands
 		try
-			set entry to exec(doc, cmd)
+			set entry to execCommand(doc, cmd)
 			if length of entry > 0 then
 				copy entry to the end of output
 			end if
@@ -57,21 +79,38 @@ on execCommands(doc, commands)
 end execCommands
 
 on packagePath(doc)
-	return quoted form of exec(doc, "go list")
+	return quoted form of execCommand(doc, "go list")
 end packagePath
+
+-- Echo doc contents
+on echoContents(doc)
+	set prevDelimiter to AppleScript's text item delimiters
+	set AppleScript's text item delimiters to {ASCII character 10}
+	set output to "echo " & quoted form of ((lines of doc) as string)
+	log output
+	set AppleScript's text item delimiters to prevDelimiter
+	--return paragraphs of filteredString
+	return output
+end echoContents
 
 -- Parse message into result browser entry
 --
 -- Format:
 --     [/path/to/file]:[line]:(col): [message]
-on makeEntry(itemData, cwd)
+on makeEntry(itemData, doc, cwd)
 	try
 		-- Get source path
 		set src to text 1 thru ((offset of ":" in itemData) - 1) of itemData
+		log src
 		if src starts with "./" then
 			set srcFile to POSIX file (cwd & text 3 thru -1 of src)
-		else
+		else if src starts with "/" then
 			set srcFile to POSIX file (src)
+		else if src starts with "<standard input>" then
+			set srcFile to POSIX path of doc
+			
+		else
+			set srcFile to POSIX file (cwd & text 1 thru -1 of src)
 		end if
 		
 		-- Get line:column
@@ -114,26 +153,26 @@ on makeEntry(itemData, cwd)
 	end try
 end makeEntry
 
--- Filter and sort incoming messages
-on prepareMessages(messages)
-	set prevDelimiter to AppleScript's text item delimiters
-	set AppleScript's text item delimiters to {ASCII character 10}
-	set filteredString to do shell script ("echo " & quoted form of (messages as string) & " | sort -f | uniq")
-	set AppleScript's text item delimiters to prevDelimiter
-	return paragraphs of filteredString
-end prepareMessages
-
 on showResults(title, doc, messages)
 	tell application "Finder"
 		set cwd to POSIX path of ((container of (doc as alias) as string))
+		set docName to name of (doc as alias)
 	end tell
 	
-	set errorList to {}
-	set messageList to prepareMessages(messages)
+	-- Normalize any file names
+	set sedString to "s/([<]*[>])'/" & docName & "/g"
+	set msgString to execStdIn(messages, "sed " & quoted form of sedString)
 	
-	repeat with msg in messageList
-		if msg does not start with "#" then
-			set entry to makeEntry(msg, cwd)
+	-- Filter invalid entries
+	
+	-- Sort & unique
+	set msgString to execStdIn(msgString, "sort -f | uniq")
+	log msgString
+	set errorList to {}
+	
+	repeat with msg in msgString
+		if msg does not start with "#" and msg does not start with "exit status" then
+			set entry to makeEntry(msg, doc, cwd)
 			if entry is not missing value then
 				copy entry to the end of errorList
 			end if
@@ -153,26 +192,41 @@ end showResults
 
 on documentWillSave(doc)
 	return
+	try
+		set docPath to POSIX path of ((file of doc) as string)
+		set output to execCommandWithPrefix(doc, echoContents(doc), "goimports")
+		if output is not missing value then
+			tell application "BBEdit"
+				set contents of doc to output
+			end tell
+		end if
+	on error msg
+		set results to results & msg
+		--showResults("goimports " & (name of doc), POSIX file (docPath), msg)
+	end try
 end documentWillSave
 
 on documentDidSave(doc)
+	return
 	try
 		set docPath to POSIX path of ((file of doc) as string)
-		set pkgPath to packagePath(doc)
-		set goCommands to {"goimports -w " & quoted form of docPath, "golint " & quoted form of docPath, "go build"}
+		--set pkgPath to packagePath(doc)
+		set goCommands to {"golint " & quoted form of docPath, "go vet " & quoted form of docPath}
 		set output to execCommands(doc, goCommands)
 		if output is not missing value then
-			showResults("Save " & (name of doc), POSIX file (docPath), output)
+			set results to results & output
+			--showResults("golint " & (name of doc), POSIX file (docPath), output)
 		end if
 	on error msg
 		log "Error documentDidSave: " & msg
 	end try
+	if length of results > 0 then
+		showResults("Save", POSIX file (docPath), results)
+	end if
 end documentDidSave
 
-(*
 on run
 	tell application "BBEdit" to set doc to active document of window 1
 	documentWillSave(doc)
 	documentDidSave(doc)
 end run
-*)

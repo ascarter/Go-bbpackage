@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+
+# Show results browser for each entry on stdin
+# Format:
+#   [error|warning|note]:[path]:[line]:[col]: [msg]
+
+class Entry
+  def initialize(kind="error", file=nil, line = nil, column = nil, message = "")
+    @kind = kind
+    @file = file
+    @line = line
+    @column = column
+    @message = message
+  end
+  
+  # Parse result line
+  def parse(line)
+    #$stderr.puts "line=#{line}"
+    parts = line.split(":")
+    if parts.length == 0
+      return false
+    end
+
+    @kind = parts[0]
+    @file = parts[1]
+    if parts.length == 4
+      @line = parts[2]
+      @message = parts[3].strip()
+    else
+      @line = parts[2]
+      @column = parts[3]
+      @message = parts[4].strip()
+    end
+    return true
+  end
+  
+  def to_s()
+    return "{result_kind:#{@kind}_kind, result_file:POSIX file \"#{@file}\", result_line:#{@line}, message: \"#{@message}\"}"
+  end
+end
+
+def showResults(title, entries)
+  if entries.length == 0
+    return
+  end
+  script = <<-eos
+tell application "BBEdit"
+    set resultsData to {#{entries.join(",")}}
+    log resultsData
+    make new results browser with data resultsData with properties {name:"#{title}"}
+end tell
+eos
+  cmd = "osascript -l AppleScript - <<SCRIPT\n" + script + "SCRIPT"
+  STDERR.puts cmd
+  system(cmd)
+end
+
+# Read entries from stdin
+entries = []
+STDIN.readlines.each do |line|
+  entry = Entry.new()
+  if entry.parse(line)
+    entries.push entry
+    STDERR.puts entry
+  end
+end
+
+showResults("Test", entries)
