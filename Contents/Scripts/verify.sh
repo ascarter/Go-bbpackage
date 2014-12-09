@@ -9,4 +9,4 @@ PATH="$(dirname "$0")/../Resources":$PATH
 	(gorunner golint "$BB_DOC_PATH" 2>&1) | awk '{print "warning:" $0}'
 	(gorunner go vet 2>&1) | awk '{print "error:" $0}'
 	(gorunner go build $(gorunner go list) 2>&1) | awk '{print "error:" $0}'
-) | goresults
+) | goresults -t "Verify"

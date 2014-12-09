@@ -7,6 +7,8 @@ require 'optparse'
 #   [error|warning|note]:[path]:[line]:[col]: [msg]
 
 class Entry
+  attr_reader :kind, :file, :line, :column, :message
+  
   def initialize(kind="error", file=nil, line = nil, column = nil, message = "")
     @kind = kind
     @file = file
@@ -32,10 +34,10 @@ class Entry
     
     # Set line and column
     if parts.length == 2
-      @line = parts.shift
+      @line = parts.shift.to_i
     else
-      @line = parts.shift
-      @column = parts.shift
+      @line = parts.shift.to_i
+      @column = parts.shift.to_i
     end
     
     # Set message
@@ -62,7 +64,6 @@ end
 
 # Read options
 options = {
-  :show => false,
   :title => "goresults",
   :cwd => Dir.pwd 
 }
@@ -70,9 +71,6 @@ options = {
 opt_parser = OptionParser.new do |opts|
   opts.banner = "Usage: goresults [options]"
   opts.separator ""
-  opts.on("-s", "--show", "Show results browser") do |s|
-    options[:show] = true
-  end
   opts.on("-t", "--title TITLE", "Set title") do |t|
     options[:title] = t
   end
@@ -98,12 +96,8 @@ STDIN.readlines.each do |line|
 end
 
 # Sort and filter entries
-entries.sort_by! { |e| e.to_s }
+entries.sort_by! { |e| [e.file, e.line, e.message] }
 entries.uniq! { |e| e.id }
 
 # Display results browser
-if options[:show]
-  showResults(options[:title], entries)
-else
-  entries.each { |e| STDOUT.puts e.to_s }
-end
+showResults(options[:title], entries)
