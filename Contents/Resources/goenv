@@ -15,11 +15,11 @@ _goenv_help() {
     echo "\tlist      list all workspace paths"
     echo "\twhich     show current Go workspace"
     echo "\tenv       environment variables for workspace"
-    echo "\tedit      open specified package path in VISUAL editor (default $GOPATH/src)"
+    echo "\tedit      open package path in VISUAL editor (default \$GOPATH/src)"
+    echo "\tcd        switch to directory of package path (default \$GOPATH/src)"
     echo "\ngoenv manages the workspace by setting the GOPATH environment variable"
     echo "When setting or adding a workspace, goenv will search up the path"
-    echo "to find the parent with the required GOPATH entries of bin, pkg, and"
-    echo "src"
+    echo "to find the parent with the required GOPATH entries of bin, pkg, and src"
 }
 
 _goenv_read_config() {
@@ -227,8 +227,11 @@ _goenv_exec() {
         fi
         ;;
     edit)
-        _goenv_edit $edit_path `_goenv_find_ws_path`/src/$2
+        _goenv_edit `_goenv_find_ws_path`/src/$2
         ;;
+    cd)
+    	cd `_goenv_find_ws_path`/src/$2
+    	;;
     *)
         echo "Invalid command"
     esac
@@ -250,7 +253,7 @@ goenv() {
     		fi
     	)
     	;;
-    init | switch | add | rm | edit)
+    init | switch | add | rm | edit | cd)
         shift
         if [ $# -gt 0 ]
         then
