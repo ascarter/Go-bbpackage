@@ -2,9 +2,10 @@
 
 require 'optparse'
 
-# Show results browser for each entry on stdin
+# Show results browser with each entry on stdin
+#
 # Format:
-#   [error|warning|note]:[path]:[line]:[col]: [msg]
+#   [error|warning|note]:[path]:[line]:(col): [msg]
 
 class Entry
   attr_reader :kind, :file, :line, :column, :message
@@ -58,18 +59,18 @@ end
 
 def showResults(title, entries)  
   return if entries.length == 0  
-  script = "tell me to tell application \"BBEdit\" to make new results browser with data {#{entries.join(",")}} with properties {name:\"#{title}\"}"
+  script = "tell application \"BBEdit\" to make new results browser with data {#{entries.join(",")}} with properties {name:\"#{title}\"}"
   IO.popen("osascript -l AppleScript -e '#{script}'")
 end
 
 # Read options
 options = {
-  :title => "goresults",
+  :title => "Results",
   :cwd => Dir.pwd 
 }
 
 opt_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: goresults [options]"
+  opts.banner = "Usage: bbresults [options]"
   opts.separator ""
   opts.on("-t", "--title TITLE", "Set title") do |t|
     options[:title] = t
@@ -77,6 +78,9 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-d", "--dir DIR", "Set working directory") do |d|
     options[:cwd] = File.expand_path(d)
   end
+  opts.separator ""
+  opts.separator "Input on STDIN in following format for each entry:"
+  opts.separator "\t[error|warning|note]:[path]:[line]:(col): [msg]"
 end
 opt_parser.parse!
 
