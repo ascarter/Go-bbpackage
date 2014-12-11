@@ -19,31 +19,35 @@ class Entry
   end
   
   # Parse result line
-  def parse(cwd, line)   
-    parts = line.split(":")
-    return false if parts.length < 4
-    
+  def parse(cwd, line) 
+    parts = line.split(":", 2)
+    return false if parts.length < 2
+      
     # Set result kind
-    @kind = parts.shift
-    return false if not ["error", "warning", "note"].include?(@kind)
+    if ["error", "warning", "note"].include?(parts[0])
+      @kind = parts[0]
+      parts = parts[1].split(":", 2)
+      return false if parts.length < 2
+    end
     
     # Set file path
-    filename = parts.shift.sub(/^[.][\/]/,"")
+    filename = parts[0].sub(/^[.][\/]/,"")
     filename.prepend("#{cwd}/") if not filename.start_with?("/")
     @file = File.expand_path(filename)
     return false if !File.file?(@file)
     
     # Set line and column
+    parts = parts[1].split(":", 2)
+    return false if parts.length < 2
+    
+    @line = parts[0].to_i
+    parts = parts[1].split(":", 2)
     if parts.length == 2
-      @line = parts.shift.to_i
-    else
-      @line = parts.shift.to_i
       @column = parts.shift.to_i
     end
     
     # Set message
     @message = parts.shift.strip()
-    
     return true
   end
   
@@ -59,7 +63,7 @@ end
 
 def showResults(title, entries)  
   return if entries.length == 0  
-  script = "tell application \"BBEdit\" to make new results browser with data {#{entries.join(",")}} with properties {name:\"#{title}\"}"
+  script = "tell application \"BBEdit\"\nmake new results browser with data {#{entries.join(",")}} with properties {name:\"#{title}\"}\nactivate\nend tell"
   IO.popen("osascript -l AppleScript -e '#{script}'")
 end
 
@@ -80,7 +84,7 @@ opt_parser = OptionParser.new do |opts|
   end
   opts.separator ""
   opts.separator "Input on STDIN in following format for each entry:"
-  opts.separator "\t[error|warning|note]:[path]:[line]:(col): [msg]"
+  opts.separator "\t(error|warning|note):[path]:[line]:(col): [msg]"
 end
 opt_parser.parse!
 
