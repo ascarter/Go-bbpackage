@@ -1,3 +1,7 @@
+package main
+
+import "fmt"
+
 func main() {
-	#PLACEHOLDERSTART#body#PLACEHOLDEREND#
+	#SELSTART#fmt.Println("Hello BBEdit")#SELEND#
 }
