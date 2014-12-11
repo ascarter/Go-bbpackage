@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 PATH="$(dirname "$0")/../Resources":$PATH
 CTAGS=/Applications/BBEdit.app/Contents/Helpers/ctags
