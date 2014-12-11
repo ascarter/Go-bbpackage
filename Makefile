@@ -28,6 +28,6 @@ $(TAGFILE):
 		--regex-GoStdLib="/^package[ \t]+([a-zA-Z_][a-zA-Z0-9_]+)/\1/p,package/" \
 		--regex-GoStdLib="/const[ \t]+([A-Z][a-zA-Z0-9_]+)[ \t]+.*\=[ \t]+(.*)/\1/d,constant/" \
 		--languages=GoStdLib --fields=+a+m+n+S --excmd=number --tag-relative=no \
-		--exclude="*_test.go" -f $(TAGOBJ) $(GOROOT)/src/pkg
+		--exclude="*_test.go" -f $(TAGOBJ) $(GOROOT)/src
 	mkdir -p Contents/Completion\ Data/Go
 	mv $(TAGOBJ) $(TAGFILE)
