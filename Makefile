@@ -4,22 +4,30 @@
 
 CTAGS = /Applications/BBEdit.app/Contents/Helpers/ctags
 
+XIBS := src/Resources/godoc.xib
+XIBOBJS := $(XIBS:src/Resources/%.xib=Contents/Resources/%.xib)
+
 TAGOBJ := ./gostdlib.tags
 TAGFILE := Contents/Completion\ Data/Go/Go\ Standard\ Library.tags
 
 .DEFAULT: all
 
-.PHONY: all clean install
+.PHONY: all clean install xibs
 
-all: $(TAGFILE)
+all: $(TAGFILE) xibs
 
 clean:
 	-rm -f $(TAGOBJ)
 	-rm -f $(TAGFILE)
+	-rm -f $(XIBOBJS)
 
 install: all
 	open .
 
+xibs:
+	#xcrun ibtool src/Resources/godoc.xib --compile Contents/Resources/godoc.xib
+	cp src/Resources/godoc.xib Contents/Resources/godoc.xib
+	
 $(TAGFILE):
 	$(CTAGS) --recurse --langdef=GoStdLib --langmap=GoStdLib:.go \
 		--regex-GoStdLib="/func([ \t]+\([^)]+\))?[ \t]+([A-Z][a-zA-Z0-9_]+)/\2/f,func/" \
