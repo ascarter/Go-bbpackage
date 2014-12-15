@@ -17,40 +17,7 @@ class Entry
     @column = column
     @message = message
   end
-  
-  # Parse result line
-  def parse(cwd, line) 
-    parts = line.split(":", 2)
-    return false if parts.length < 2
-      
-    # Set result kind
-    if ["error", "warning", "note"].include?(parts[0])
-      @kind = parts[0]
-      parts = parts[1].split(":", 2)
-      return false if parts.length < 2
-    end
     
-    # Set file path
-    filename = parts[0].sub(/^[.][\/]/,"")
-    filename.prepend("#{cwd}/") if not filename.start_with?("/")
-    @file = File.expand_path(filename)
-    return false if !File.file?(@file)
-    
-    # Set line and column
-    parts = parts[1].split(":", 2)
-    return false if parts.length < 2
-    
-    @line = parts[0].to_i
-    parts = parts[1].split(":", 2)
-    if parts.length == 2
-      @column = parts.shift.to_i
-    end
-    
-    # Set message
-    @message = parts.shift.strip()
-    return true
-  end
-  
   def to_s()
     return "{result_kind:#{@kind}_kind, result_file:POSIX file \"#{@file}\", result_line:#{@line}, message: \"#{@message}\"}"
   end
@@ -59,6 +26,30 @@ class Entry
   def id()
     return "#{@file}:#{@line}:#{@message}"
   end
+end
+
+def parse(cwd, line)
+  m = /^((\w+?)[:])?(\S+?)[:](\d+?)([:](\d+))?[:]\s+?(.*)$/.match(line)
+  return nil if m.nil?
+  
+  # kind
+  kind = ["error", "warning", "note"].include?(m[2]) ? m[2] : "error"
+  
+  # file
+  filename = m[3].sub(/^[.][\/]/,"")
+  filename.prepend("#{cwd}/") if not filename.start_with?("/")
+  file = File.expand_path(filename)
+  return nil if !File.file?(file)
+  
+  # line, column
+  line =  m[4].nil? ? m[4].to_i : 0
+  column = m[6].nil? ? m[6].to_i : 0
+  
+  # message
+  message = m[7].strip unless m[7].nil?
+  
+  #STDERR.puts "kind='#{kind}' file='#{file}' line='#{line}' column='#{column}' message='#{message}'"  
+  return Entry.new(kind, file, line, column, message)
 end
 
 def showResults(title, entries)  
@@ -97,10 +88,8 @@ end
 # Read entries from stdin
 entries = []
 STDIN.readlines.each do |line|
-  entry = Entry.new()
-  if entry.parse(options[:cwd], line)
-    entries.push entry
-  end
+  entry = parse(options[:cwd], line)
+  entries.push entry unless entry.nil?
 end
 
 # Sort and filter entries
