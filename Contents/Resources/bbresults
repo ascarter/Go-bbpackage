@@ -64,7 +64,7 @@ end
 def showResults(title, entries)  
   return if entries.length == 0  
   script = "tell application \"BBEdit\"\nmake new results browser with data {#{entries.join(",")}} with properties {name:\"#{title}\"}\nactivate\nend tell"
-  IO.popen("osascript -l AppleScript -e '#{script}'")
+  IO.popen("osascript -l AppleScript - <<SCRIPT\n#{script}\nSCRIPT")
 end
 
 # Read options
