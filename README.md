@@ -41,7 +41,7 @@ Pull changes and run make install again:
 
 ## Support for Document attachment scripts
 
-The package has a handler for `documentWillSave` event. To utilize this, an AppleScript needs to be added to `../Application Support/BBEdit/Attachment Scripts/Document.scpt`. This script should call the `documentWillSave` script passing the current window contents for formatting. The script will work the same as `Text Filters/goimports.sh`. It is meant to reformat the code before it is saved (same approach that is taken for Vim and Emacs for example). If `goimports` has errors, the contents are not changed and the errors are *not* reported.
+The package has a handler for `documentDidSave` event. To utilize this, an AppleScript needs to be added to `../Application Support/BBEdit/Attachment Scripts/Document.scpt`. This script should call the `documentDidSave` script with then environment variable `$BB_DOC_PATH` set to the document that saved. The script will work the same as `Text Filters/goimports.sh`. If `goimports` has errors, the contents are not changed and the errors are *not* reported.
 
 For an example, see [this](https://github.com/ascarter/BBEditSupport/blob/master/Attachment%20Scripts/Document.applescript) script. There are other useful tools in this repository as well.
 
