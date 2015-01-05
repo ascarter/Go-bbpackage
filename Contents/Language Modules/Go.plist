@@ -196,7 +196,7 @@
 												\[((?P>identifier)|[0-9]+)\](?P>type)
 											) |
 											(?P<structtype>
-												struct\s+\{\s*
+												struct\s*\{\s*
 												(((?P<fielddecl>
 													(?P>identifier)\s+
 													((?P>type) | [*](?P>identifier))
@@ -217,7 +217,7 @@
 												)|[;]+)*\s*\}
 											) |
 											(?P<slicetype>
-												\[\](?P>type)
+												\[(\d+|(?P>typename))*\](?P>type)
 											) |
 											(?P<maptype>
 												map\s*\[\s*(?P>type)\s*\]\s*(?P>type)
