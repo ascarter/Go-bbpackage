@@ -1,3 +1,8 @@
+Go.bbpackage
+============
+
+BBEdit package for Go development
+
 Features
 --------
 
