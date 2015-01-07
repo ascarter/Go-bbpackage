@@ -1,8 +1,3 @@
-Go language for BBEdit
-=======================
-
-Go support for BBEdit.
-
 Features
 --------
 
