@@ -5,8 +5,8 @@
 #
 # Assumed to be run by BBEdit scripts with BB_DOC_PATH set to the document
 
-# Add goenv to shell environment
-source "$(dirname "$0")/goenv"
+# Add gows to shell environment
+source "$(dirname "$0")/gows"
 
 # Add Go to the path
 if [ -d /usr/local/go ]
@@ -28,4 +28,4 @@ then
 fi
 
 cd $(dirname "$BB_DOC_PATH")
-goenv run $*
+gows run $*
