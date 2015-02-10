@@ -46,7 +46,7 @@ _gows_exec() {
 
 _gows_find_ws_path() {
     local WSPATH=$(pwd)
-    while [[ "$WSPATH" != "" && ! -e "$WSPATH/bin" && ! -e "$WSPATH/pkg" && ! -e "$WSPATH/src" ]]; do
+    while [[ "$WSPATH" != "" ]] && ! [[ -d "$WSPATH/bin" && -d "$WSPATH/pkg" && -d "$WSPATH/src" ]]; do
         WSPATH=${WSPATH%/*}
     done
     echo "$WSPATH"
