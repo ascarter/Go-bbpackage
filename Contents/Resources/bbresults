@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+require 'digest/sha2'
 
 # Show results browser with each entry on stdin
 #
@@ -10,7 +11,7 @@ require 'optparse'
 class Entry
   attr_reader :kind, :file, :line, :column, :message
   
-  def initialize(kind="error", file=nil, line = nil, column = nil, message = "")
+  def initialize(kind="error", file=nil, line=nil, column=nil, message="")
     @kind = kind
     @file = file
     @line = line
@@ -24,53 +25,96 @@ class Entry
   
   # id is a form of a key that disregards kind so that uniq can be used to filter
   def id()
-    return "#{@file}:#{@line}:#{@message}"
+    return Digest::SHA256.hexdigest("#{@file}:#{@line}:#{@message}")
+  end
+
+  def self.parse(cwd, value)
+    # Match fields:
+    # [0] == entire match
+    # [1]
+    # [2] == type
+    # [3] == path
+    # [4] == line
+    # [5]
+    # [6] == column
+    # [7] == message
+    m = /^((\w+?)[:])?(\S+?)[:](\d+?)([:](\d+))?[:]\s+?(.*)$/.match(value)
+    return nil if m.nil?
+  
+    # kind
+    kind = ["error", "warning", "note"].include?(m[2]) ? m[2] : "error"
+  
+    # file
+    filename = m[3].sub(/^[.][\/]/,"")
+    filename.prepend("#{cwd}/") if not filename.start_with?("/")
+    file = File.expand_path(filename)
+    return nil if !File.file?(file)
+  
+    # line, column
+    line = m[4].nil? ? 0 : m[4].to_i
+    column = m[6].nil? ? 0 : m[6].to_i
+  
+    # message
+    message = m[7].strip unless m[7].nil?
+  
+    #STDERR.puts "kind='#{kind}' file='#{file}' line='#{line}' column='#{column}' message='#{message}'"  
+    return Entry.new(kind, file, line, column, message)
   end
 end
 
-def parse(cwd, value)
-  # Match fields:
-  # [0] == entire match
-  # [1]
-  # [2] == type
-  # [3] == path
-  # [4] == line
-  # [5]
-  # [6] == column
-  # [7] == message
-  m = /^((\w+?)[:])?(\S+?)[:](\d+?)([:](\d+))?[:]\s+?(.*)$/.match(value)
-  return nil if m.nil?
+class Notification
+  attr_reader :status, :result, :path, :message
+    
+  def initialize(message, path=nil, status=true, result=nil)
+    @message = message
+    @path = path
+    @status = status
+    if result.nil?
+      @result = status ? "PASS" : "FAIL"
+    else
+      @result = result
+    end
+  end
   
-  # kind
-  kind = ["error", "warning", "note"].include?(m[2]) ? m[2] : "error"
-  
-  # file
-  filename = m[3].sub(/^[.][\/]/,"")
-  filename.prepend("#{cwd}/") if not filename.start_with?("/")
-  file = File.expand_path(filename)
-  return nil if !File.file?(file)
-  
-  # line, column
-  line = m[4].nil? ? 0 : m[4].to_i
-  column = m[6].nil? ? 0 : m[6].to_i
-  
-  # message
-  message = m[7].strip unless m[7].nil?
-  
-  #STDERR.puts "kind='#{kind}' file='#{file}' line='#{line}' column='#{column}' message='#{message}'"  
-  return Entry.new(kind, file, line, column, message)
+  def to_s()
+    return "#{self.result()} #{@path} #{@message}"
+  end
+    
+  def self.parse(value)
+    m = /^(\w+?)[ \t]+(\S+)\s+(.*)$/.match(value)
+    return nil if m.nil?
+    
+    result = m[1]
+    status = %w{OK ok PASS pass SUCCESS success}.include?(result)
+    path = m[2].strip
+    message = m[3].strip
+    return Notification.new(message, path, status, result)
+  end
+end
+
+def runAppleScript(script)
+  IO.popen("osascript -l AppleScript - <<SCRIPT\n#{script}\nSCRIPT")
 end
 
 def showResults(title, entries)
   return if entries.length == 0
-  script = "tell application \"BBEdit\"\nmake new results browser with data {#{entries.join(",")}} with properties {name:\"#{title}\"}\nactivate\nend tell"
-  IO.popen("osascript -l AppleScript - <<SCRIPT\n#{script}\nSCRIPT")
+  runAppleScript %Q{tell application "BBEdit"\nmake new results browser with data {#{entries.join(",")}} with properties {name:"#{title}"}\nactivate\nend tell}
+end
+
+def showNotifications(title, notifications=[])
+  return if notifications.length == 0
+  
+  # Determine if success for failure
+  failed = notifications.select { |n| !n.status }
+  subtitle = failed.empty? ? "PASS" : "FAIL"
+  runAppleScript %Q{tell application "BBEdit"\ndisplay notification "#{notifications.join("\n")}" with title "#{title}" subtitle "#{subtitle}"\nend tell} 
 end
 
 # Read options
 options = {
   :title => "Results",
-  :cwd => Dir.pwd 
+  :cwd => Dir.pwd ,
+  :verbose => false
 }
 
 opt_parser = OptionParser.new do |opts|
@@ -81,6 +125,9 @@ opt_parser = OptionParser.new do |opts|
   end
   opts.on("-d", "--dir DIR", "Set working directory") do |d|
     options[:cwd] = File.expand_path(d)
+  end
+  opts.on("-v", "--verbose", "Verbose output") do |v|
+    options[:verbose] = v
   end
   opts.separator ""
   opts.separator "Input on STDIN in following format for each entry:"
@@ -96,9 +143,16 @@ end
 
 # Read entries from stdin
 entries = []
+notifications = []
 STDIN.readlines.each do |line|
-  entry = parse(options[:cwd], line)
-  entries.push entry unless entry.nil?
+  entry = Entry.parse(options[:cwd], line)
+  unless entry.nil?
+    entries.push entry unless entry.nil?
+  else
+    notification = Notification.parse(line)
+    notifications.push notification unless notification.nil?
+  end
+  STDOUT.puts line if options[:verbose]
 end
 
 # Sort and filter entries
@@ -107,3 +161,4 @@ entries.uniq! { |e| e.id }
 
 # Display results browser
 showResults(options[:title], entries)
+showNotifications(options[:title], notifications)
