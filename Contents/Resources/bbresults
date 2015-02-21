@@ -20,7 +20,7 @@ class Entry
   end
     
   def to_s()
-    return "{result_kind:#{@kind}_kind, result_file:POSIX file \"#{@file}\", result_line:#{@line}, message: \"#{@message}\"}"
+    return %Q|{result_kind:#{@kind}_kind, result_file:POSIX file "#{@file}", result_line:#{@line}, message: "#{@message.gsub("\"","\\\"")}"}|
   end
   
   # id is a form of a key that disregards kind so that uniq can be used to filter
