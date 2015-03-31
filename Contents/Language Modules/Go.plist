@@ -23,77 +23,91 @@
 	<false/>
 	<key>BBLMIsCaseSensitive</key>
 	<true/>
-	<key>BBLMKeywordList</key>
+	
+	<key>BBLMKeywords</key>
 	<array>
-		<string>break</string>
-		<string>case</string>
-		<string>chan</string>
-		<string>const</string>
-		<string>continue</string>
-		<string>default</string>
-		<string>defer</string>
-		<string>else</string>
-		<string>fallthrough</string>
-		<string>for</string>
-		<string>func</string>
-		<string>go</string>
-		<string>goto</string>
-		<string>if</string>
-		<string>import</string>
-		<string>interface</string>
-		<string>map</string>
-		<string>package</string>
-		<string>range</string>
-		<string>return</string>
-		<string>select</string>
-		<string>struct</string>
-		<string>switch</string>
-		<string>type</string>
-		<string>var</string>
+		<dict>
+			<key>RunKind</key>
+			<string>com.barebones.bblm.keyword</string>
+			<key>Keywords</key>
+			<array>
+				<string>break</string>
+				<string>case</string>
+				<string>chan</string>
+				<string>const</string>
+				<string>continue</string>
+				<string>default</string>
+				<string>defer</string>
+				<string>else</string>
+				<string>fallthrough</string>
+				<string>for</string>
+				<string>func</string>
+				<string>go</string>
+				<string>goto</string>
+				<string>if</string>
+				<string>import</string>
+				<string>interface</string>
+				<string>map</string>
+				<string>package</string>
+				<string>range</string>
+				<string>return</string>
+				<string>select</string>
+				<string>struct</string>
+				<string>switch</string>
+				<string>type</string>
+				<string>var</string>
+			</array>
+		</dict>
+		
+		<dict>
+			<key>RunKind</key>
+			<string>com.barebones.bblm.predefined-symbols</string>
+			<key>Keywords</key>
+			<array>
+				<string>append</string>
+				<string>cap</string>
+				<string>close</string>
+				<string>complex</string>
+				<string>copy</string>
+				<string>delete</string>
+				<string>false</string>
+				<string>imag</string>
+				<string>int</string>
+				<string>iota</string>
+				<string>len</string>
+				<string>make</string>
+				<string>new</string>
+				<string>nil</string>
+				<string>panic</string>
+				<string>print</string>
+				<string>println</string>
+				<string>real</string>
+				<string>recover</string>
+				<string>rune</string>
+				<string>true</string>
+				<!-- Default types -->
+				<string>bool</string>
+				<string>byte</string>
+				<string>complex128</string>
+				<string>complex64</string>
+				<string>error</string>
+				<string>float32</string>
+				<string>float64</string>
+				<string>int16</string>
+				<string>int32</string>
+				<string>int64</string>
+				<string>int8</string>
+				<string>string</string>
+				<string>uint</string>
+				<string>uint16</string>
+				<string>uint32</string>
+				<string>uint64</string>
+				<string>uint8</string>
+				<string>uintptr</string>
+			</array>
+		</dict>
 	</array>
-	<key>BBLMPredefinedNameList</key>
-	<array>
-		<string>append</string>
-		<string>cap</string>
-		<string>close</string>
-		<string>complex</string>
-		<string>copy</string>
-		<string>delete</string>
-		<string>false</string>
-		<string>imag</string>
-		<string>int</string>
-		<string>iota</string>
-		<string>len</string>
-		<string>make</string>
-		<string>new</string>
-		<string>nil</string>
-		<string>panic</string>
-		<string>print</string>
-		<string>println</string>
-		<string>real</string>
-		<string>recover</string>
-		<string>rune</string>
-		<string>true</string>
-		<!-- Default types -->
-		<string>bool</string>
-		<string>byte</string>
-		<string>complex128</string>
-		<string>complex64</string>
-		<string>error</string>
-		<string>float32</string>
-		<string>float64</string>
-		<string>int16</string>
-		<string>int32</string>
-		<string>int64</string>
-		<string>int8</string>
-		<string>string</string>
-		<string>uint</string>
-		<string>uint16</string>
-		<string>uint32</string>
-		<string>uint64</string>
-		<string>uint8</string>
-		<string>uintptr</string>
-	</array>
+
 	<key>BBLMSuffixMap</key>
 	<array>
 		<dict>
@@ -101,16 +115,11 @@
 			<string>.go</string>
 		</dict>
 	</array>
+	
 	<key>Language Features</key>
 	<dict>
 		<key>Identifier and Keyword Character Class</key>
 		<string>A-Za-z0-9_</string>
-		<key>Open Block Comments</key>
-		<string>/*</string>
-		<key>Close Block Comments</key>
-		<string>*/</string>
-		<key>Open Line Comments</key>
-		<string>//</string>
 		<key>Prefix for Functions</key>
 		<string>func</string>
 		<key>Prefix for Procedures</key>
@@ -129,7 +138,7 @@
 			(?x:
 				("	(?s: \\. | [^"])*?	(?: " | $)) |	 (?# Interpreted string literal)
 				('	(?s: \\' | [^'])*?	(?: ' | $)) |	 (?# Rune literal)
-				(`	(?s: [^`])			*?	`)						 (?# Raw string literal)
+				(`	(?s: [^`])			*?	`)           (?# Raw string literal)
 			)]]>
 		</string>
 		
