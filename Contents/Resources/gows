@@ -1,5 +1,18 @@
 #  -*- mode: unix-shell-script; -*-
 
+_gows_config() {
+	rcfiles=(/usr/etc/goenvrc /usr/local/etc/goenvrc ~/.goenvrc ./.goenvrc)
+	packages=()
+	
+	for rc in ${rcfiles[*]}; do
+		if [ -e $rc ]; then
+			while read line; do
+				packages=("${packages[@]}" $line)
+			done <$rc
+		fi
+	done
+}
+
 _gows_exec() {
     case "$1" in
     add)
@@ -15,21 +28,11 @@ _gows_exec() {
     edit)
         _gows_edit $2
         ;;
-    get)
-    	_gows_get $2
-    	;;
     init)
         if [ -z "$2" ]; then
             _gows_init $(pwd)
         else
             _gows_init `_gows_fullpath $2`
-        fi
-        ;;
-    rm)
-        if [ -z "$2" ]; then
-            _gows_rm `_gows_find_ws_path`
-        else
-            _gows_rm `_gows_fullpath $2`
         fi
         ;;
     switch)
@@ -80,13 +83,19 @@ _gows_add() {
 			if [ -z "$_GOWS_OLD_PATH" ]; then
 				# Workspace has not been set yet
 				_gows_switch $1
-			elif [[ -n "$GOPATH" && ! "$GOPATH" =~  (^|:)"$1"(:|$) ]]; then
-				# Add workspace if not already on GOPATH
-				GOPATH=$GOPATH:$1
+			elif [[ ! "$GOPATH" =~  (^|:)"$1"(:|$) ]]; then
+				# Add workspace
+				if [ -n "$GOPATH" ]; then
+					GOPATH=${1}:${GOPATH}
+				else
+					GOPATH=${1}
+				fi
 				export GOPATH
 			
-				PATH=$_GOWS_OLD_PATH:${1}/bin
+				PATH=${1}/bin:${PATH}
 				export PATH
+			else
+				echo "Workspace already set"
 			fi
 		else
 			echo "Not a Go workspace"
@@ -97,7 +106,19 @@ _gows_add() {
 }
 
 _gows_cd() {
-	cd `_gows_find_ws_path`/src/$1
+	# Determine if relative or full path or package name
+	case "$1" in
+		/*)
+			cd `_gows_fullpath $1`
+			;;
+		.*)
+			cd "$1"
+			;;
+		*)
+			cd `_gows_find_ws_path`/src/$1
+			;;
+	esac
+	
 	_gows_add `_gows_find_ws_path`
 }
 
@@ -113,27 +134,19 @@ _gows_edit() {
 	fi
 }
 
-_gows_env() {
-        echo "GOPATH=$GOPATH"
-        echo "GOROOT=$GOROOT"
-        echo "PATH=$PATH"
-}
-
-_gows_get() {
-	if [[ -n "$GOPATH" ]]; then
-		# Go get into the current workspace
-		GOPATH=`_gows_find_ws_path` go get $1
-	else
-		echo "Go workspace not set"
-	fi
-}
-
 _gows_init() {
     if [ -n "$1" ]; then
-        mkdir -p $1/bin
-        mkdir -p $1/pkg
-        mkdir -p $1/src
+        mkdir -p $1/bin $1/pkg $1/src
         _gows_add $1
+        
+        # Read configuration
+        _gows_config
+        
+        # go get default packages
+        for pkg in ${packages[*]}; do
+        	echo "go get ${pkg}"
+			go get "${pkg}"
+        done
     else
         echo "Path does not exist"
     fi
@@ -161,24 +174,11 @@ _gows_reset() {
         	GOPATH=$_GOWS_OLD_GOPATH
         	export GOPATH
 	        unset _GOWS_OLD_GOPATH
+	    else
+	    	unset GOPATH
 	    fi
     else
         echo "Go workspace not set"
-    fi
-}
-
-_gows_rm() {
-    if [[ -n "$1" && -d "$1" && -n "$GOPATH" && "$GOPATH" =~  (^|:)"$1"(:|$) ]]; then
-        local items=$GOPATH
-        _gows_reset
-        items=(`_gows_split $items ":"`)
-        for item in "${items[@]}"; do
-            if [ "$item" != "$1" ]; then
-                _gows_add $item
-            fi
-        done
-    else
-        echo "Go workspace missing"
     fi
 }
 
@@ -214,11 +214,11 @@ gows() {
     cmd=$1
     
     case "$cmd" in
-    cd | get | edit | switch)
+    cd | edit | switch)
     	_gows_exec $@
         ;;
-	# Can add/remove/init a list of directories
-    add | get | rm | init)
+	# Commands for list
+    add | init)
     	shift
     	if [ $# -gt 0 ]; then
     		while (($#)); do
@@ -226,7 +226,7 @@ gows() {
     			shift
     		done
     	else
-    		_gows_exec $@
+    		_gows_exec $cmd
     	fi
     	;;
     run)
@@ -241,6 +241,5 @@ gows() {
     reset     ) _gows_reset;;
     list      ) _gows_list;;
     which     ) _gows_which;;
-    env       ) _gows_env;;
     esac
 }
