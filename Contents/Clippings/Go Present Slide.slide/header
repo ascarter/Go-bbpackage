@@ -1,0 +1,11 @@
+#PLACEHOLDERSTART#Title#PLACEHOLDEREND#
+#PLACEHOLDERSTART#Subtitle#PLACEHOLDEREND#
+#DATETIME HH:mm d MMM yyyy#
+<#* Tags: foo, bar, baz #>
+
+<#* Author #>
+<#* Job title, Company #>
+<#* email #>
+<#* URL #>
+<#* @twitter #>
+

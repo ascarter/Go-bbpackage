@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+
+<!--
+	Go present slide syntax
+	Copyright 2015 Andrew Carter
+-->
+
+<dict>
+	<key>BBEditDocumentType</key>
+	<string>CodelessLanguageModule</string>
+	<key>BBLMLanguageDisplayName</key>
+	<string>Go Present Slide</string>
+	<key>BBLMLanguageCode</key>
+	<string>gosl</string>
+	<key>BBLMColorsSyntax</key>
+	<true/>
+	<key>BBLMScansFunctions</key>
+	<true/>
+	<key>BBLMCanSpellCheckCodeRuns</key>
+	<false/>
+	<key>BBLMIsCaseSensitive</key>
+	<true/>
+	
+	<key>BBLMKeywords</key>
+	<array>
+		<dict>
+			<key>RunKind</key>
+			<string>com.barebones.bblm.keyword</string>
+			<key>Keywords</key>
+			<array>
+				<string>code</string>
+				<string>play</string>
+				<string>image</string>
+				<string>iframe</string>
+				<string>link</string>
+				<string>html</string>
+				<string>caption</string>
+			</array>
+		</dict>
+	</array>
+
+	<key>BBLMSuffixMap</key>
+	<array>
+		<dict>
+			<key>BBLMLanguageSuffix</key>
+			<string>.slide</string>
+		</dict>
+	</array>
+	
+	<key>BBLMCommentLineDefault</key>
+	<string>#</string>
+	
+	<key>Language Features</key>
+	<dict>
+		<key>Function Pattern</key>
+		<string><![CDATA[
+			(?x:
+				(?P<function>
+					(?P<sectionmarker>^[*]+(?:(?>(?>\s+)))+)
+					(?P<function_name>(.*$))
+					(?P<braces>
+						(?s:.+?)
+					)
+				)(?=\r(?P>sectionmarker)|\Z)
+			)]]>
+		</string>
+	</dict>
+</dict>
+</plist>
+
