@@ -1,4 +1,4 @@
-#INDENT#func #PLACEHOLDERSTART#Name#PLACEHOLDEREND#(<#* parameters #>) http.Handler {
+#INDENT#func #SELECTIONORPLACEHOLDER Name#(<#* parameters #>) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
 	})

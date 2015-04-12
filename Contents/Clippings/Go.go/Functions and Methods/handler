@@ -1,3 +1,3 @@
-#INDENT#func #PLACEHOLDERSTART#Name#PLACEHOLDEREND#(w http.ResponseWriter, r *http.Request) {
+#INDENT#func #SELECTIONORPLACEHOLDER Name#(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
 }
