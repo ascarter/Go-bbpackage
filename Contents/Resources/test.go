@@ -20,8 +20,13 @@ import (
 )
 
 type Thing struct {
-	Name string
+	Name string "foo"
 	Age  int
+}
+
+type SuperThing struct {
+	nickname string
+	size int
 }
 
 // Main method
@@ -46,40 +51,60 @@ func Sqrt(x float64) float64 {
 func foo() int { return 5 }
 
 func foo2(v struct {
-	Name string 'foo'
+	Name string "foo"
+	// With comments!
 	Age  int
 }) int {
+	// This is a really ugly way to do it...
 	return 5
 }
 
-func foo3(v interface {
-	Read(b []byte)
+func foo3(v interface{}) int {
+	return 10
+}
+
+func foo4(v interface {
+	Read(b []byte);
+	// With comments!
 	Close()
 }) int {
+	// This is really ugly...
 	return 5
 }
 
-func foo4(handler func(x int, y string))int {
+func foo5(handler func(x int, y string))int {
 	return 5
 }
 
-func foo5(x ...int) int{
+func foo6(x ...int) int{
 	return 5
+}
+
+func foo7(first, last string) string {
+	return fmt.Sprintf("%s %s", first, last)
 }
 
 func _mapTest(myMap map[string]interface{}) int {
 	return 5
 }
 
-func b1234ar(w http.ResponseWriter, r *http.Request) (string, int) {
+func b1234ar(w http.ResponseWriter, r http.Request) (string, int) {
 	fmt.Fprintf(w, "Hello")
 	return "abc", 10
 }
 
-func (p *Thing) init(fset *http.Request, filename string, src []byte) (ret int) {
+func (p *Thing) init(fset *http.Request, filename string, src byte) (ret int) {
 	fmt.Printf("%s", filename)
 	return
 
+}
+
+func (p *Thing) newThing(thing2 Thing) (Thing, error) {
+	return thing2, nil
+}
+
+func NewSuperThing(size int) (SuperThing, error) {
+	return SuperThing{"superthing", size}, nil
 }
 
 func (t *Thing) makeInChan(c <-chan int) <-chan int {
@@ -98,5 +123,9 @@ func (t *Thing) makeOutChan(c <-chan int) chan<- int {
 }
 
 func (t *Thing) makeChannels(in <-chan int, out chan<- int)(<-chan int, chan<- int) {
+	return in, out
+}
+
+func (t *Thing) makeNamedChannels(in <-chan int, out chan<- int)(c1 <-chan int, c2 chan<- int) {
 	return in, out
 }

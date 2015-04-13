@@ -174,87 +174,28 @@
 			(?x: 
 				(?P<function>
 					func
-					(?:(?>(?>\s+)))+
+					(?P<whitespace>(?:(?>(?>\s+))))+
 					(?# receiver)
-					(?P<receiver>
-						\(\s*
-						(?P<identifier>([a-zA-Z_][a-zA-Z0-9_]*)+)
-						\s+
-						[*]*(?P>identifier)
-						\)
-						(?:(?>(?>\s+)))+
-					)*
-					(?# function name)
-					(?P<function_name>(?P>identifier))
-					(?:(?>(?>\s+)))*
-					(?P<signature>
-						(?P<parameters>
-							\(\s*
-								(
-									((?P>identifier)\s+)?\s*
-									([.]{3})?
-									(?P<type>
-										(?P<typename>
-											(?P>identifier) |
-											(?P<qualfiedidentifier>
-												(?P>identifier)[.](?P>identifier)
-											)
-										) |
-										(?P<typelit>
-											(?P<arraytype>
-												\[((?P>identifier)|[0-9]+)\](?P>type)
-											) |
-											(?P<structtype>
-												struct\s*\{\s*
-												(((?P<fielddecl>
-													(?P>identifier)\s+
-													((?P>type) | [*](?P>identifier))
-													(\s+(?P>string))?
-												)\s*)|[;]+)*
-												\s*\}											
-											) |
-											(?P<pointertype>
-												[*](?P>type)
-											) |
-											(?P<functiontype>
-												func\s*(?P>signature)
-											) |
-											(?P<interfacetype>
-												interface\s*\{\s*
-												((?P<methodspec>
-													((?P>identifier)\s*(?P>signature)|(?P>identifier))
-												)|[;]+)*\s*\}
-											) |
-											(?P<slicetype>
-												\[(\d+|(?P>typename))*\](?P>type)
-											) |
-											(?P<maptype>
-												map\s*\[\s*(?P>type)\s*\]\s*(?P>type)
-											) |
-											(?P<channeltype>
-												(chan<-|<-chan|chan)\s+(?P>type)
-											)
-										) |
-										\(\s*(?P>type)\s*\)
-									)
-									\s*[,]?\s*
-								)*
-                            \)
-                        )
-						(?:(?>(?>\s+)))*
-						(?P<result>
-							(?P>type)|(?P>parameters)
-						)*
-					)					
-					(?:(?>(?>\s+)))*
+					(?P<parens>
+						[(]
+							(?:(?>(?>[^()]+)|(?P>parens)))*
+						[)]
+					)?
+					(?P>whitespace)*					
+					(?P<function_name>(?P<identifier>([a-zA-Z_][a-zA-Z0-9_]*)+))
+					(?P>whitespace)*
+					(?# signature)
+						(?# parameters
+						(?P>parens)
+						(?P>whitespace)*
+						(?# result)
+						[^{]*
+					(?P>whitespace)*
+					(?# body)
 					(?P<braces>
-						{
-							(?:
-								(?>
-									(?> [^'"{}]+ ) | (?: / (?![/*]) ) | (?P>comment) | (?P>string) | (?P>braces)
-								)
-							)*
-						}
+						[{]
+							(?:(?>(?> [^'"{}]+ ) | (?: / (?![/*]) ) | (?P>comment) | (?P>string) | (?P>braces)))*
+						[}]
 					)
 				)
 			)]]>

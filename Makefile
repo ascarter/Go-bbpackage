@@ -12,7 +12,7 @@ TAGFILE := Contents/Completion\ Data/Go/Go\ Standard\ Library.tags
 
 .DEFAULT: all
 
-.PHONY: all clean install xibs
+.PHONY: all clean install xibs test
 
 all: $(TAGFILE) xibs
 
@@ -27,7 +27,10 @@ install: all
 xibs:
 	#xcrun ibtool src/Resources/godoc.xib --compile Contents/Resources/godoc.xib
 	cp src/Resources/godoc.xib Contents/Resources/godoc.xib
-	
+
+test:
+	go build Contents/Resources/test.go
+
 $(TAGFILE):
 	$(CTAGS) --recurse --langdef=GoStdLib --langmap=GoStdLib:.go \
 		--regex-GoStdLib="/func([ \t]+\([^)]+\))?[ \t]+([A-Z][a-zA-Z0-9_]+)/\2/f,func/" \
