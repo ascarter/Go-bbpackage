@@ -99,6 +99,16 @@ func (p *Thing) init(fset *http.Request, filename string, src byte) (ret int) {
 
 }
 
+func (p *Thing) Get(key string) (interface{}, error) {
+	return "string", nil
+}
+
+func (p *Thing) GetAny(key string) interface{} {
+	return "string"
+}
+
+fmt.Prin
+
 func (p *Thing) newThing(thing2 Thing) (Thing, error) {
 	return thing2, nil
 }
