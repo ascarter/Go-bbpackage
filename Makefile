@@ -3,18 +3,20 @@
 #
 
 CTAGS = /Applications/BBEdit.app/Contents/Helpers/ctags
+GOTAGS ?= gotags
 
 XIBS := src/Resources/godoc.xib
 XIBOBJS := $(XIBS:src/Resources/%.xib=Contents/Resources/%.xib)
 
 TAGOBJ := ./gostdlib.tags
 TAGFILE := Contents/Completion\ Data/Go/Go\ Standard\ Library.tags
+CTAGSFILE := Contents/Completion\ Data/Go/Go\ Standard\ Library.ctags
 
 .DEFAULT: all
 
-.PHONY: all clean install xibs test
+.PHONY: all clean install xibs tags ctags test
 
-all: $(TAGFILE) xibs
+all: tags xibs
 
 clean:
 	-rm -f $(TAGOBJ)
@@ -31,7 +33,11 @@ xibs:
 test:
 	go build Contents/Resources/test.go
 
-$(TAGFILE):
+tags: $(TAGFILE)
+
+ctags: $(CTAGSFILE)
+
+$(CTAGSFILE):
 	$(CTAGS) --recurse --langdef=GoStdLib --langmap=GoStdLib:.go \
 		--regex-GoStdLib="/func([ \t]+\([^)]+\))?[ \t]+([A-Z][a-zA-Z0-9_]+)/\2/f,func/" \
 		--regex-GoStdLib="/var[ \t]+([A-Z][a-zA-Z0-9_]+)/\1/v,var/" \
@@ -42,3 +48,16 @@ $(TAGFILE):
 		--exclude="*_test.go" -f $(TAGOBJ) $(GOROOT)/src
 	mkdir -p Contents/Completion\ Data/Go
 	mv $(TAGOBJ) $(TAGFILE)
+
+$(TAGFILE):
+	mkdir -p Contents/Completion\ Data/Go
+	$(GOTAGS) -R \
+		--exclude="*_test.go" \
+		--exclude="/usr/local/go/src/*/*/testdata/*" \
+		--exclude="/usr/local/go/src/*/*/testdata/*/*" \
+		--exclude="/usr/local/go/src/*/*/testdata/*/*/*" \
+		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*" \
+		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*" \
+		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*" \
+		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*/*" \
+		-f=$(TAGFILE) --exported=true $(GOROOT)/src
