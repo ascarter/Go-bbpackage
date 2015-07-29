@@ -1,3 +1,4 @@
 func TestMain(m *testing.M) {
+	#INSERTION#
 	os.Exit(m.Run())
 }
