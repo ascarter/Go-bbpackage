@@ -5,11 +5,11 @@
 GOTAGS ?= gotags
 
 SRC_DIR = ./src
-CONTENTS_DIR = $(SRC_DIR)/Contents
 PKG = ./Go.bbpackage
+CONTENTS_DIR = $(PKG)/Contents
 
-XIBS = $(SRC_DIR)/Resources/godoc.xib
-TAGFILE = $(PKG)/Contents/Completion\ Data/Go/Go\ Standard\ Library.tags
+COMPLETION_DIR = $(CONTENTS_DIR)/Completion\ Data/Go
+TAGFILE = $(COMPLETION_DIR)/Go\ Standard\ Library.tags
 
 .DEFAULT: all
 
@@ -26,10 +26,10 @@ install: all
 build: $(PKG)
 	
 $(PKG):
-	mkdir -p $(PKG)
+	mkdir -p $(CONTENTS_DIR)
 	cp README.md $(PKG)/.
 	cp LICENSE $(PKG)/.
-	cp -R $(CONTENTS_DIR) $(PKG)/.
+	cp -R $(SRC_DIR)/* $(CONTENTS_DIR)/.
 
 test:
 	go build test.go
@@ -37,7 +37,7 @@ test:
 tags: $(TAGFILE)
 
 $(TAGFILE):
-	mkdir -p $(PKG)/Contents/Completion\ Data/Go
+	mkdir -p $(COMPLETION_DIR)
 	$(GOTAGS) -R \
 		--exclude="*_test.go" \
 		--exclude="/usr/local/go/src/*/*/testdata/*" \
