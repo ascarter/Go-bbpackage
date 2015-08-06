@@ -107,8 +107,6 @@ func (p *Thing) GetAny(key string) interface{} {
 	return "string"
 }
 
-fmt.Prin
-
 func (p *Thing) newThing(thing2 Thing) (Thing, error) {
 	return thing2, nil
 }
