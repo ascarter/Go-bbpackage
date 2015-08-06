@@ -1,6 +1,3 @@
-Go.bbpackage
-============
-
 BBEdit package for Go development
 
 Features
@@ -26,14 +23,14 @@ The best way to use BBEdit with a Go project is to simply launch BBEdit from the
 
 The package should be cloned into a working directory. The `Makefile` will build the sources. The `install` task will install the package to the correct `Application Support` directory (either in `$HOME/Dropbox/Application Support/BBEdit` or `$HOME/Library/Application Support/BBEdit`).
 
-        git clone https://github.com/ascarter/Go.bbpackage.git
-        cd Go.bbpackage
+        git clone https://github.com/ascarter/Go-bbpackage.git
+        cd Go-bbpackage
         make install
 
 ## Update
 
 Pull changes and run make install again:
 
-        cd Go.bbpackage
+        cd Go-bbpackage
         git pull
         make install
