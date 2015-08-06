@@ -60,4 +60,5 @@ $(TAGFILE):
 		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*" \
 		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*" \
 		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*/*" \
-		-f=$(TAGFILE) --exported=true $(GOROOT)/src
+		--exclude="/usr/local/go/src/*/*/*/testdata/*" \
+		-f=$(TAGFILE) --exclude-private=true $(GOROOT)/src
