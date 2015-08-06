@@ -48,4 +48,14 @@ $(TAGFILE):
 		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*" \
 		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*/*" \
 		--exclude="/usr/local/go/src/*/*/*/testdata/*" \
+		--exclude="/usr/local/go/src/internal/*/*" \
+		--exclude="/usr/local/go/src/internal/*/*/*" \
+		--exclude="/usr/local/go/*/internal/*" \
+		--exclude="/usr/local/go/*/internal/*/*" \
+		--exclude="/usr/local/go/*/internal/*/*/*" \
+		--exclude="/usr/local/go/*/internal/*/*/*/*" \
+		--exclude="/usr/local/go/*/*/internal/*" \
+		--exclude="/usr/local/go/*/*/internal/*/*" \
+		--exclude="/usr/local/go/*/*/internal/*/*/*" \
+		--exclude="/usr/local/go/*/*/internal/*/*/*/*" \
 		-f=$(TAGFILE) --exclude-private=true $(GOROOT)/src
