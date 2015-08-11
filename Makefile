@@ -3,6 +3,7 @@
 #
 
 GOTAGS ?= gotags
+GOROOT ?= /usr/local/go
 
 SRC_DIR = ./src
 PKG = ./Go.bbpackage
@@ -40,22 +41,22 @@ $(TAGFILE):
 	mkdir -p $(COMPLETION_DIR)
 	$(GOTAGS) -R \
 		--exclude="*_test.go" \
-		--exclude="/usr/local/go/src/*/*/testdata/*" \
-		--exclude="/usr/local/go/src/*/*/testdata/*/*" \
-		--exclude="/usr/local/go/src/*/*/testdata/*/*/*" \
-		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*" \
-		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*" \
-		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*" \
-		--exclude="/usr/local/go/src/*/*/testdata/*/*/*/*/*/*/*" \
-		--exclude="/usr/local/go/src/*/*/*/testdata/*" \
-		--exclude="/usr/local/go/src/internal/*/*" \
-		--exclude="/usr/local/go/src/internal/*/*/*" \
-		--exclude="/usr/local/go/*/internal/*" \
-		--exclude="/usr/local/go/*/internal/*/*" \
-		--exclude="/usr/local/go/*/internal/*/*/*" \
-		--exclude="/usr/local/go/*/internal/*/*/*/*" \
-		--exclude="/usr/local/go/*/*/internal/*" \
-		--exclude="/usr/local/go/*/*/internal/*/*" \
-		--exclude="/usr/local/go/*/*/internal/*/*/*" \
-		--exclude="/usr/local/go/*/*/internal/*/*/*/*" \
+		--exclude="$(GOROOT)/src/*/*/testdata/*" \
+		--exclude="$(GOROOT)/src/*/*/testdata/*/*" \
+		--exclude="$(GOROOT)/src/*/*/testdata/*/*/*" \
+		--exclude="$(GOROOT)/src/*/*/testdata/*/*/*/*" \
+		--exclude="$(GOROOT)/src/*/*/testdata/*/*/*/*/*" \
+		--exclude="$(GOROOT)/src/*/*/testdata/*/*/*/*/*/*" \
+		--exclude="$(GOROOT)/src/*/*/testdata/*/*/*/*/*/*/*" \
+		--exclude="$(GOROOT)/src/*/*/*/testdata/*" \
+		--exclude="$(GOROOT)/src/internal/*/*" \
+		--exclude="$(GOROOT)/src/internal/*/*/*" \
+		--exclude="$(GOROOT)/*/internal/*" \
+		--exclude="$(GOROOT)/*/internal/*/*" \
+		--exclude="$(GOROOT)/*/internal/*/*/*" \
+		--exclude="$(GOROOT)/*/internal/*/*/*/*" \
+		--exclude="$(GOROOT)/*/*/internal/*" \
+		--exclude="$(GOROOT)/*/*/internal/*/*" \
+		--exclude="$(GOROOT)/*/*/internal/*/*/*" \
+		--exclude="$(GOROOT)/*/*/internal/*/*/*/*" \
 		-f=$(TAGFILE) --exclude-private=true $(GOROOT)/src
