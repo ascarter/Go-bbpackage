@@ -3,7 +3,7 @@
 #
 
 GOTAGS ?= gotags
-GOROOT ?= /usr/local/go
+GOROOT ?= $(shell go env GOROOT)
 
 SRC_DIR = ./src
 PKG = ./Go.bbpackage

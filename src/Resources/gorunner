@@ -8,17 +8,16 @@
 # Add gows to shell environment
 source "$(dirname "$0")/gows"
 
-# Add Go to the path
-if [ -d /usr/local/go ]
-then
-	export PATH=/usr/local/go/bin:${PATH}
-elif [ -d /opt/go ]
-then
-	export PATH=/opt/go/bin:${PATH}
+# Verify Go is installed
+if which go &>/dev/null; then
+	GOROOT=`go env GOROOT`
 else
 	echo "Go is not installed" >&2
 	exit -1
-fi 
+fi
+
+# Add Go to the path
+export PATH=${GOROOT}:${PATH}
 
 # Check that document was provided
 if [ -z "$BB_DOC_PATH" ]
