@@ -12,7 +12,13 @@ Features
 
 The package is a collection of BBEdit supporting elements for developing Go applications. The `Resources` directory contains the toolset for supporting the scripting and integration.
 
-The shell scripts utilize a snapshot of [gows](https://github.com/ascarter/gows) which is a workspace manager that can detect the Go workspace and run commands within that workspace. The scripts also uses a snapshot of [bbresults](https://github.com/ascarter/dotfiles/blob/master/src/bin/bbresults). This is a Ruby script that accepts formatted records on `stdin` and displays them in a results browser window in BBEdit. It is useful for lint or build tools to output results in BBEdit in an easy to use form.
+The shell scripts utilize a snapshot of [gows](https://github.com/ascarter/gows) which is a workspace manager that can detect the Go workspace and run commands within that workspace. The scripts also uses a snapshot of [bbresults](https://github.com/ascarter/dotfiles/blob/master/src/bin/bbresults). This is a Ruby script that accepts formatted records on `stdin` and displays them in a results browser window in BBEdit. It is useful for lint or build tools to output results in BBEdit in an easy to use form. 
+
+This script also requires the installation of the [gotags](https://github.com/jstemmer/gotags) library and program.
+
+To install `gotags`: 
+
+		go get github.com/jstemmer/gotags
 
 The best way to use BBEdit with a Go project is to simply launch BBEdit from the project root.
 
