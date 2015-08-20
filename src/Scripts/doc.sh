@@ -6,13 +6,13 @@ while [[ $# > 1 ]]; do
 	
 	case $OPT in
 		-pkg|--pkg)
-			PKGPATH=$1
+			PKG=$1
 			shift
 			;;
 	esac
 done
 
-if [ -n "$PKGPATH" ]; then
+if [ -n "$PKG" ]; then
 	PATH="$(dirname "$0")/../Resources":$PATH
-	gorunner godoc "$PKGPATH" 2>&1
+	gorunner go doc "$PKG" 2>&1 | bbedit --new-window --clean --pipe-title "go doc $PKG" +1
 fi
