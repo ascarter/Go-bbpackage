@@ -188,9 +188,9 @@
 						(?# parameters)
 						(?P>parens)
 						(?P>whitespace)*
-						(?# result)
-						[^{]*
-					(?P>whitespace)*
+						(?# return values)
+						(?:.*)
+					(?P>whitespace)+
 					(?# body)
 					(?P<braces>
 						[{]

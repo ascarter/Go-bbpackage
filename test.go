@@ -26,7 +26,7 @@ type Thing struct {
 
 type SuperThing struct {
 	nickname string
-	size int
+	size     int
 }
 
 // Main method
@@ -53,7 +53,7 @@ func foo() int { return 5 }
 func foo2(v struct {
 	Name string "foo"
 	// With comments!
-	Age  int
+	Age int
 }) int {
 	// This is a really ugly way to do it...
 	return 5
@@ -64,7 +64,7 @@ func foo3(v interface{}) int {
 }
 
 func foo4(v interface {
-	Read(b []byte);
+	Read(b []byte)
 	// With comments!
 	Close()
 }) int {
@@ -72,11 +72,11 @@ func foo4(v interface {
 	return 5
 }
 
-func foo5(handler func(x int, y string))int {
+func foo5(handler func(x int, y string)) int {
 	return 5
 }
 
-func foo6(x ...int) int{
+func foo6(x ...int) int {
 	return 5
 }
 
@@ -130,10 +130,10 @@ func (t *Thing) makeOutChan(c <-chan int) chan<- int {
 	return out
 }
 
-func (t *Thing) makeChannels(in <-chan int, out chan<- int)(<-chan int, chan<- int) {
+func (t *Thing) makeChannels(in <-chan int, out chan<- int) (<-chan int, chan<- int) {
 	return in, out
 }
 
-func (t *Thing) makeNamedChannels(in <-chan int, out chan<- int)(c1 <-chan int, c2 chan<- int) {
+func (t *Thing) makeNamedChannels(in <-chan int, out chan<- int) (c1 <-chan int, c2 chan<- int) {
 	return in, out
 }
