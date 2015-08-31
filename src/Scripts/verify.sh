@@ -8,5 +8,4 @@ PATH="$(dirname "$0")/../Resources":"$(dirname "$0")":$PATH
     goimports.sh
     golint.sh
     vet.sh
-    build.sh
 ) | bbresults -t "Verify"
