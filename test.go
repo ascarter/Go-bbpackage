@@ -12,6 +12,10 @@ fmt.Println("hello")
 }
 */
 
+`This is an example of a Go raw string.
+Newlines shouldn't affect string matching.
+You cannot embed a backquote in the string using escape character.`
+
 package main
 
 import (

@@ -138,7 +138,7 @@
 			(?x:
 				("	(?s: \\. | [^"])*?	(?: " | $)) |	 (?# Interpreted string literal)
 				('	(?s: \\' | [^'])*?	(?: ' | $)) |	 (?# Rune literal)
-				(`	(?s: [^`])			*?	`)           (?# Raw string literal)
+				(?s: `.*?`)                              (?# Raw string literal)
 			)]]>
 		</string>
 		
