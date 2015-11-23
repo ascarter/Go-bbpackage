@@ -24,6 +24,14 @@
 	<key>BBLMIsCaseSensitive</key>
 	<true/>
 	
+	<!-- Comments -->
+	<key>BBLMCommentLineDefault</key>
+	<string>//</string>
+	<key>BBLMCommentPrefixDefault</key>
+	<string>/*</string>
+	<key>BBLMCommentSuffixDefault</key>
+	<string>*/</string>	
+	
 	<key>BBLMKeywords</key>
 	<array>
 		<dict>
@@ -144,17 +152,16 @@
 		
 		<key>Comment Pattern</key>
 		<string><![CDATA[
-				(?x:
-						(//.*$)				 | (?# Line comment)
-						(?s:/\*.*?\*/)	 (?# Block comment)
-				)]]>
+			(?x:
+				(//.*$)        | (?# Line comment)
+				(?s:/\*.*?\*/)	 (?# Block comment)
+			)]]>
 		</string>
 		
 		<key>Skip Pattern</key>
 		<string><![CDATA[
-			(?x:
-					(?P>comment) |
-					(?P>string)
+			(?x: 
+				(?P>comment) | (?P>string)
 			)]]>
 		</string>
 
