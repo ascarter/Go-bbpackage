@@ -27,4 +27,4 @@ then
 fi
 
 cd $(dirname "$BB_DOC_PATH")
-gows run $*
+GO15VENDOREXPERIMENT=1 gows run $*
