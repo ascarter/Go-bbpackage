@@ -8,6 +8,7 @@ require 'digest/sha2'
 # Format:
 #   [error|warning|note]:[path]:[line]:(col): [msg]
 
+# Entry is a record for the results browser
 class Entry
   attr_reader :kind, :file, :line, :column, :message
   
@@ -38,30 +39,36 @@ class Entry
     # [5]
     # [6] == column
     # [7] == message
-    m = /^((\w+?)[:])?(\S+?)[:](\d+?)([:](\d+))?[:]\s+?(.*)$/.match(value)
+    # m = /^((\w+?)[:])?(\S+?)[:](\d+?)([:](\d+))?[:]\s+?(.*)$/.match(value)
+    m = /^\s?((\w+?)[:]\s?)?(\S+?)[:](\d+?)([:](\d+))?[:]\s+?(.*)$/.match(value)
     return nil if m.nil?
-  
+
     # kind
     kind = ["error", "warning", "note"].include?(m[2]) ? m[2] : "error"
-  
+
     # file
     filename = m[3].sub(/^[.][\/]/,"")
     filename.prepend("#{cwd}/") if not filename.start_with?("/")
     file = File.expand_path(filename)
-    return nil if !File.file?(file)
-  
+    unless File.file?(file)
+      STDERR.puts "  ==> Not found: #{file}"
+      return nil
+    end
+
     # line, column
     line = m[4].nil? ? 0 : m[4].to_i
     column = m[6].nil? ? 0 : m[6].to_i
-  
+
     # message
-    message = m[7].strip unless m[7].nil?
+    # Escape ` since it breaks sending it to BBEdit
+    message = m[7].strip.gsub(/[`]/, '\\\`') unless m[7].nil?
   
-    #STDERR.puts "kind='#{kind}' file='#{file}' line='#{line}' column='#{column}' message='#{message}'"  
+    STDERR.puts "kind='#{kind}' file='#{file}' line='#{line}' column='#{column}' message='#{message}'"
     return Entry.new(kind, file, line, column, message)
   end
 end
 
+# Notification is a record for pass/fail messages
 class Notification
   attr_reader :status, :result, :path, :message
     
@@ -79,11 +86,16 @@ class Notification
   def to_s()
     return "#{self.result()} #{@path} #{@message}"
   end
-    
+
   def self.parse(value)
+    # Match fields:
+    # [0] == entire match
+    # [1] == result
+    # [2] == path
+    # [3] == message
     m = /^(\w+?)[ \t]+(\S+)\s+(.*)$/.match(value)
     return nil if m.nil?
-    
+  
     result = m[1]
     status = %w{OK ok PASS pass SUCCESS success}.include?(result)
     path = m[2].strip
@@ -92,28 +104,28 @@ class Notification
   end
 end
 
-def runAppleScript(script)
+def runOSA(script)
   IO.popen("osascript -l AppleScript - <<SCRIPT\n#{script}\nSCRIPT")
 end
 
 def showResults(title, entries)
   return if entries.length == 0
-  runAppleScript %Q{tell application "BBEdit"\nmake new results browser with data {#{entries.join(",")}} with properties {name:"#{title}"}\nactivate\nend tell}
+  runOSA %Q{tell application "BBEdit"\nmake new results browser with data {#{entries.join(",")}} with properties {name:"#{title}"}\nactivate\nend tell}
 end
 
 def showNotifications(title, notifications=[])
   return if notifications.length == 0
   
-  # Determine if success for failure
+  # Determine if success or failure
   failed = notifications.select { |n| !n.status }
   subtitle = failed.empty? ? "PASS" : "FAIL"
-  runAppleScript %Q{tell application "BBEdit"\ndisplay notification "#{notifications.join("\n")}" with title "#{title}" subtitle "#{subtitle}"\nend tell} 
+  runOSA %Q{tell application "BBEdit"\ndisplay notification "#{notifications.join("\n")}" with title "#{title}" subtitle "#{subtitle}"\nend tell} 
 end
 
 # Read options
 options = {
   :title => "Results",
-  :cwd => Dir.pwd ,
+  :cwd => Dir.pwd,
   :verbose => false
 }
 
@@ -147,7 +159,7 @@ notifications = []
 STDIN.readlines.each do |line|
   entry = Entry.parse(options[:cwd], line)
   unless entry.nil?
-    entries.push entry unless entry.nil?
+    entries.push entry
   else
     notification = Notification.parse(line)
     notifications.push notification unless notification.nil?
@@ -159,6 +171,7 @@ end
 entries.sort_by! { |e| [e.file, e.line, e.message] }
 entries.uniq! { |e| e.id }
 
-# Display results browser
+# Display results and notifications
 showResults(options[:title], entries)
 showNotifications(options[:title], notifications)
+
