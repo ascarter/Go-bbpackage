@@ -69,7 +69,7 @@
 		
 		<dict>
 			<key>RunKind</key>
-			<string>com.barebones.bblm.predefined-symbols</string>
+			<string>com.barebones.bblm.predefined-symbol</string>
 			<key>Keywords</key>
 			<array>
 				<string>append</string>
