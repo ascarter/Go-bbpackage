@@ -25,7 +25,7 @@ The following are required for using Go.bbpackage:
 
 ### ctags
 
-A completion library is can be built using [Universal Ctags](https://ctags.io/). This is a  modern maintained version of [Exuberant Ctags](http://ctags.sourceforge.net/). It includes support for Go.
+A completion library can be built using [Universal Ctags](https://ctags.io/). This is a  modern maintained version of [Exuberant Ctags](http://ctags.sourceforge.net/). It includes support for Go.
 
 The easiest way to install it is to use homebrew:
 
