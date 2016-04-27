@@ -21,18 +21,34 @@ The following are required for using Go.bbpackage:
 * [BBEdit](http://barebones.com/products/bbedit) 11.1 or greater
 * [Go](https://golang.org/dl/) 1.5 or greater
 
-Optional components:
+## Optional components:
 
-* [gotags](https://github.com/jstemmer/gotags)
+### ctags
 
-`gotags` provides a more complete ctags compatible `tags` file. Code completion using `gotags` output is significantly improved. To install `gotags`: 
+A completion library is can be built using [Universal Ctags](https://ctags.io/). This is a  modern maintained version of [Exuberant Ctags](http://ctags.sourceforge.net/). It includes support for Go.
 
-		go get -u github.com/jstemmer/gotags
+The easiest way to install it is to use homebrew:
+
+    brew tap universal-ctags/universal-ctags
+    brew install --HEAD universal-ctags
+
+The following is a recommended `~/.ctags` configuration:
+
+    --exclude=.git
+    --extra=+p+q+r
+    --fields=+a+m+n+S
+    --sort=no
+
+To build a tags library for the Go standard library, run the following target (run by default):
+
+    make tags
+
+## Build
 
 To build `Go.bbpackage`:
 
 * [Xcode](https://developer.apple.com/xcode/) 6 or greater (particularly the command line tools package)
-* [gotags](https://github.com/jstemmer/gotags)
+* [Universal Ctags](https://ctags.io/)
 
 ## Install
 
