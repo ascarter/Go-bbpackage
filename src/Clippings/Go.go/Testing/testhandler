@@ -1,9 +1,13 @@
 func Test#SELECTIONORPLACEHOLDER MyHandler#(t *testing.T) {
-	// Create a request to pass to handler with nil query parameters
-	req, err := http.NewRequest("GET", "/#SELECTIONORPLACEHOLDER handler#", nil)
+	// Create a request
+	params := url.Values{#PLACEHOLDERSTART#"param1": {"1"}, "param2": {"2"}#PLACEHOLDEREND#}
+	req, err := http.NewRequest("GET", "/#SELECTIONORPLACEHOLDER handler#", params)
 	if err != nil {
 		t.Fatal(err)
 	}
+	
+	// Set request headers
+	req.Header.Set("#PLACEHOLDERSTART#Header#PLACEHOLDEREND#", "#PLACEHOLDERSTART#value#PLACEHOLDEREND#")
 
 	// Record the response.
 	w := httptest.NewRecorder()
