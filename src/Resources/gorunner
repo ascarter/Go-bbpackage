@@ -1,12 +1,17 @@
 #!/bin/sh
 
-#
 # Shell runner for Go commands
 #
-# Assumed to be run by BBEdit scripts with BB_DOC_PATH set to the document
+# Run by BBEdit scripts with BB_DOC_PATH set to the document
 
-# Add gows to shell environment
-source "$(dirname "$0")/gows"
+# Determine Go path
+gopath() {
+    local wspath=$(pwd)
+    while [[ "$wspath" != "" ]] && ! [[ -d "$wspath/bin" && -d "$wspath/pkg" && -d "$wspath/src" ]]; do
+        wspath=${wspath%/*}
+    done
+    echo "$wspath"
+}
 
 # Verify Go is installed
 if which go &>/dev/null; then
@@ -16,15 +21,17 @@ else
 	exit -1
 fi
 
-# Add Go to the path
-export PATH=${GOROOT}:${PATH}
-
 # Check that document was provided
-if [ -z "$BB_DOC_PATH" ]
-then
+if [ -z "$BB_DOC_PATH" ]; then
 	echo "Document missing" >&2
 	exit 1
 fi
 
-cd $(dirname "$BB_DOC_PATH")
-GO15VENDOREXPERIMENT=1 gows run $*
+cd $(dirname "${BB_DOC_PATH}")
+
+# Set PATH and GOPATH for workspace
+export PATH=${GOROOT}:${PATH}
+export GOPATH=$(gopath)
+
+# Run command
+$*
