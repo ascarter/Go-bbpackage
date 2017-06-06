@@ -11,7 +11,7 @@ CONTENTS_DIR = $(PKG)/Contents
 COMPLETION_DIR = $(CONTENTS_DIR)/Completion\ Data/Go
 TAGOBJ := ./gostdlib.tags
 TAGFILE := $(COMPLETION_DIR)/Go\ Standard\ Library.tags
-CTAGS_CMD ?= ctags
+CTAGS_CMD ?= /Applications/BBEdit.app/Contents/Resources/ctags
 CTAGS_ARGS = --recurse --extra=+p+q+r --fields=+a+m+n+S --excmd=number --tag-relative=no --sort=no \
 	--exclude=.git --exclude="*_test.go" --exclude="**/testdata/**" --exclude="**/internal/**"
 
@@ -28,7 +28,7 @@ install: all
 	open $(PKG)/.
 
 build: $(PKG)
-	
+
 $(PKG):
 	mkdir -p $(CONTENTS_DIR)
 	cp README.md $(PKG)/.
