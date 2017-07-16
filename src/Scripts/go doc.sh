@@ -13,6 +13,6 @@ while [[ $# > 1 ]]; do
 done
 
 if [ -n "$PKG" ]; then
-	PATH="$(dirname "$0")/../../Resources":$PATH
+	PATH="$(dirname "$0")/../Resources":$PATH
 	gorunner go doc "$PKG" 2>&1 | bbedit --new-window --clean --pipe-title "go doc $PKG" +1
 fi
