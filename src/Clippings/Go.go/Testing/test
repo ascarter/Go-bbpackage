@@ -1,5 +1,5 @@
-#INDENT#func Test#PLACEHOLDERSTART#Name#PLACEHOLDEREND#(t *testing.T) {
-	#PLACEHOLDERSTART#if got != want {
-		t.Errorf("Do %q == %q, want %q", in, got, want)
-	}#PLACEHOLDEREND#
+#INDENT#func Test#SELECTIONORPLACEHOLDER Name#(t *testing.T) {
+	if got != want {
+		t.Errorf("got %q; want %q", got, want)
+	}
 }

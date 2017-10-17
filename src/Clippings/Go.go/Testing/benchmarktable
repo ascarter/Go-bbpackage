@@ -1,0 +1,20 @@
+#INDENT#func Benchmark#SELECTIONORPLACEHOLDER Name#(b *testing.B) {
+	// <setup code>
+
+    benchmarks := []struct{
+		name string
+		#PLACEHOLDERSTART#input#PLACEHOLDEREND# #PLACEHOLDERSTART#string#PLACEHOLDEREND#
+    }{
+		{ "#PLACEHOLDERSTART#name#PLACEHOLDEREND#", "#PLACEHOLDERSTART#input#PLACEHOLDEREND#"},
+    }
+
+    for _, bm := range benchmarks {
+        b.Run(bm.name, func(b *testing.B) {
+            for i := 0; i < b.N; i++ {
+            	#PLACEHOLDERSTART#Func#PLACEHOLDEREND#(#PLACEHOLDERSTART#input#PLACEHOLDEREND#)
+            }
+        })
+    }
+
+	// <tear-down code>
+}
