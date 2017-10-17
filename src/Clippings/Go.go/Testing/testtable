@@ -1,0 +1,21 @@
+#INDENT#func Test#SELECTIONORPLACEHOLDER NAME#(t *testing.T) {
+	// <setup code>
+
+	testCases := []struct {
+		name string
+		#PLACEHOLDERSTART#input#PLACEHOLDEREND# #PLACEHOLDERSTART#string#PLACEHOLDEREND#
+		#PLACEHOLDERSTART#want#PLACEHOLDEREND#  #PLACEHOLDERSTART#string#PLACEHOLDEREND#
+	}{
+		{ "#PLACEHOLDERSTART#name#PLACEHOLDEREND#", "#PLACEHOLDERSTART#input#PLACEHOLDEREND#", "#PLACEHOLDERSTART#want#PLACEHOLDEREND#"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T){
+			if got != tc.want {
+				t.Errorf("got %q; want %q", got, tc.want)
+			}
+		})
+	}
+
+	// <tear-down code>
+}
