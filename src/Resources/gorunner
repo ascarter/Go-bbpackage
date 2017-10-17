@@ -17,8 +17,13 @@ gopath() {
 if which go &>/dev/null; then
 	GOROOT=`go env GOROOT`
 else
-	echo "Go is not installed" >&2
-	exit -1
+	# Check for some logical locations
+	if [ -d /usr/local/go ]; then
+		GOROOT=`/usr/local/go/bin/go env GOROOT`
+	else
+		echo "Go is not installed" >&2
+		exit -1
+	fi
 fi
 
 # Check that document was provided
@@ -30,7 +35,7 @@ fi
 cd $(dirname "${BB_DOC_PATH}")
 
 # Set PATH and GOPATH for workspace
-export PATH=${GOROOT}:${PATH}
+export PATH=${GOROOT}/bin:${PATH}
 export GOPATH=$(gopath)
 
 # Run command
