@@ -1,0 +1,9 @@
+#INDENT#if err != nil {
+	switch v := err.(type) {
+	default:
+		return err
+	case *#SELECTIONORPLACEHOLDER pkg.CustomError#:
+		// ...
+		return err
+	}
+}

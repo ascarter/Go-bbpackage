@@ -1,0 +1,5 @@
+#INDENT#if err != nil {
+	if e, ok := err.(*#SELECTIONORPLACEHOLDER pkg.CustomError#); ok {
+		 // ....
+	}
+}
