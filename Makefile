@@ -34,6 +34,7 @@ $(PKG):
 	cp README.md $(PKG)/.
 	cp LICENSE $(PKG)/.
 	cp -R $(SRC_DIR)/* $(CONTENTS_DIR)/.
+	xcrun ibtool $(SRC_DIR)/Resources/go\ doc.xib  --compile $(CONTENTS_DIR)/Resources/go\ doc.xib	
 
 test:
 	go build test.go
