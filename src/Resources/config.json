@@ -1,0 +1,21 @@
+{
+  "go build": {
+    "cmd": "gorun go build #{pkgs}",
+    "output": "bbr -t 'go build'"
+  },
+  "go clean": {
+    "cmd": "gorun go clean",
+    "output": "bbr -t 'go clean'"
+  },
+  "go doc": {
+    "cmd": "gorun go doc #{pkg}",
+    "output": "bbedit --new-window --clean --pipe-title 'go doc #{pkg}' +1"
+  },
+  "go list": {
+    "cmd": "gorun go list"
+  },
+  "go test": {
+    "cmd": "gorun go test #{pkgs}",
+    "output": "bbr -t 'go test'"
+  }
+}
