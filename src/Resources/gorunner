@@ -4,28 +4,6 @@
 #
 # Run by BBEdit scripts with BB_DOC_PATH set to the document
 
-# Determine Go path
-gopath() {
-    local wspath=$(pwd)
-    while [[ "$wspath" != "" ]] && ! [[ -d "$wspath/bin" && -d "$wspath/pkg" && -d "$wspath/src" ]]; do
-        wspath=${wspath%/*}
-    done
-    echo "$wspath"
-}
-
-# Verify Go is installed
-if which go &>/dev/null; then
-	GOROOT=`go env GOROOT`
-else
-	# Check for some logical locations
-	if [ -d /usr/local/go ]; then
-		GOROOT=`/usr/local/go/bin/go env GOROOT`
-	else
-		echo "Go is not installed" >&2
-		exit -1
-	fi
-fi
-
 # Check that document was provided
 if [ -z "$BB_DOC_PATH" ]; then
 	echo "Document missing" >&2
@@ -34,9 +12,17 @@ fi
 
 cd $(dirname "${BB_DOC_PATH}")
 
+# Verify Go is installed
+gotool=`which go`
+if [ -z "${gotool}" ]; then
+	echo "Go not found" >&2
+	exit -1
+fi
+
 # Set PATH and GOPATH for workspace
-export PATH=${GOROOT}/bin:${PATH}
-export GOPATH=$(gopath)
+export GOROOT=`go env GOROOT`
+export GOPATH=`go env GOPATH`
+export PATH=${GOROOT}/bin:${GOPATH}/bin:${PATH}
 
 # Run command
 $*
