@@ -13,6 +13,28 @@ while [[ $# > 1 ]]; do
 done
 
 PATH="$(dirname "$0")/../Resources":$PATH
+
+echo "Received command: ${CMD}"
+
+case $CMD in
+
+	<#match pattern#>)
+		<#commands#>
+		;;
+
+	<#match pattern#> | <#match pattern#>)
+		<#commands#>
+		;;
+
+	*)
+		<#default commands#>
+		;;
+esac
+
+
+
+
+
 (gorunner go ${CMD} $(gorunner go list) 2>&1) | bbr -t "go ${CMD}"
 
 
