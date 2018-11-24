@@ -11,7 +11,7 @@ CONTENTS_DIR = $(PKG)/Contents
 COMPLETION_DIR = $(CONTENTS_DIR)/Completion\ Data/Go
 TAGOBJ := ./gostdlib.tags
 TAGFILE := $(COMPLETION_DIR)/Go\ Standard\ Library.tags
-CTAGS_CMD ?= /Applications/BBEdit.app/Contents/Resources/ctags
+CTAGS ?= /Applications/BBEdit.app/Contents/Helpers/ctags
 CTAGS_ARGS = --recurse --extra=+p+q+r --fields=+a+m+n+S --excmd=number --tag-relative=no --sort=no \
 	--exclude=.git --exclude="*_test.go" --exclude="**/testdata/**" --exclude="**/internal/**"
 
@@ -42,6 +42,6 @@ test:
 tags: $(TAGFILE)
 
 $(TAGFILE):
-	$(CTAGS_CMD) $(CTAGS_ARGS) -f - $(GOROOT)/src | grep -v -E '^(\w+[.])?[^A-Z]\w+\s+\S+\s\d+[;]["]\s+[cfimstv]' > $(TAGOBJ)
+	$(CTAGS) $(CTAGS_ARGS) -f - $(GOROOT)/src | grep -v -E '^(\w+[.])?[^A-Z]\w+\s+\S+\s\d+[;]["]\s+[cfimstv]' > $(TAGOBJ)
 	mkdir -p $(COMPLETION_DIR)
 	mv $(TAGOBJ) $(TAGFILE)
