@@ -22,7 +22,7 @@ The following are required for using Go.bbpackage:
 
 ## Install
 
-Download the latest release and install with BBEdit.
+Download the [latest release](https://github.com/ascarter/Go-bbpackage/releases/latest) and install with BBEdit.
 
 ## Build
 
