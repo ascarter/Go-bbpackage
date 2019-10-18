@@ -6,44 +6,31 @@ GOROOT ?= $(shell go env GOROOT)
 
 SRC_DIR = ./src
 PKG = ./Go.bbpackage
-CONTENTS_DIR = $(PKG)/Contents
+PKG_CONTENTS = $(PKG)/Contents
 
-COMPLETION_DIR = $(CONTENTS_DIR)/Completion\ Data/Go
-TAGOBJ := ./gostdlib.tags
-TAGFILE := $(COMPLETION_DIR)/Go\ Standard\ Library.tags
-CTAGS ?= /Applications/BBEdit.app/Contents/Helpers/ctags
-CTAGS_ARGS = --recurse --extra=+p+q+r --fields=+a+m+n+S --excmd=number --tag-relative=no --sort=no \
-	--exclude=.git --exclude="*_test.go" --exclude="**/testdata/**" --exclude="**/internal/**"
+.DEFAULT: help
 
-.DEFAULT: all
+help:
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
 
-.PHONY: all clean install tags ctags test
-
-all: build tags
-
-clean:
+clean: ## Clean built package
 	-rm -rf $(PKG)
 
-install: all
+install: build ## Install package
 	open $(PKG)/.
 
-update: clean install
+build: $(PKG) ## Build package
 
-build: $(PKG)
+release: build ## Create release
+	git tag -a 
 
-$(PKG):
-	mkdir -p $(CONTENTS_DIR)
-	cp README.md $(PKG)/.
-	cp LICENSE $(PKG)/.
-	cp -R $(SRC_DIR)/* $(CONTENTS_DIR)/.
-	xcrun ibtool $(SRC_DIR)/Resources/go\ doc.xib  --compile $(CONTENTS_DIR)/Resources/go\ doc.xib
-
-test:
+test: ## Run tests
 	go build test.go
 
-tags: $(TAGFILE)
-
-$(TAGFILE):
-	$(CTAGS) $(CTAGS_ARGS) -f - $(GOROOT)/src | grep -v -E '^(\w+[.])?[^A-Z]\w+\s+\S+\s\d+[;]["]\s+[cfimstv]' > $(TAGOBJ)
-	mkdir -p $(COMPLETION_DIR)
-	mv $(TAGOBJ) $(TAGFILE)
+$(PKG):
+	mkdir -p $(PKG_CONTENTS)
+	cp README.md $(PKG)/.
+	cp LICENSE $(PKG)/.
+	cp -R $(SRC_DIR)/* $(PKG_CONTENTS)/.
+	xcrun ibtool $(SRC_DIR)/Resources/go\ doc.xib  --compile $(PKG_CONTENTS)/Resources/go\ doc.xib
+	$(PKG_CONTENTS)/scripts/stdlib/Update\ ctags.sh
