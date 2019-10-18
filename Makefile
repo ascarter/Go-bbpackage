@@ -8,6 +8,9 @@ SRC_DIR = ./src
 PKG = ./Go.bbpackage
 PKG_CONTENTS = $(PKG)/Contents
 
+# TODO: get the last release and increment as a patch release
+TAG = "v1.0.0"
+
 .DEFAULT: help
 
 help:
@@ -21,8 +24,14 @@ install: build ## Install package
 
 build: $(PKG) ## Build package
 
+minor: TAG="v1.1.0"
+minor: release
+
+major: TAG="v2.0.0"
+major: release
+
 release: build ## Create release
-	git tag -a 
+	hub release create -d -e $(TAG)
 
 test: ## Run tests
 	go build test.go
