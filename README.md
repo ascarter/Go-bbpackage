@@ -1,5 +1,8 @@
 BBEdit package for Go development
 
+> This project is no longer necessary. BBEdit now has full support for Language Server Protocol (LSP) which eliminates the need for custom syntax module. I no longer use this package. See Bare Bones [support page for LSP](https://www.barebones.com/support/bbedit/lsp-notes.html) for instructions on how to install Go's LSP server.
+
+
 Features
 --------
 
